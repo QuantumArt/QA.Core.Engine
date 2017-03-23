@@ -37,7 +37,7 @@ namespace QA.Core.Engine.Web.Mvc
         /// <summary>
         /// Устанавливает маршрут страниц и виджетов.
         /// т.е адреса вида: company\...\about\jobs\programmer
-        /// HtmlPage?page=1234&part=12345
+        /// HtmlPage?page=1234&amp;part=12345
         /// </summary>
         /// <param name="name">имя маршрута</param>
         /// <param name="engine">ядро системы</param>
@@ -84,6 +84,13 @@ namespace QA.Core.Engine.Web.Mvc
             //    : routes.Count;
 
             var cr = new ContentRoute<T>(engine, null, null, innerRoute);
+
+            var controllerMapper = engine.Resolve<IControllerMapper>();
+
+            PathDictionary.PrependFinder(typeof(T), new CustomRouteTypeFinder(controllerMapper,
+                controllerMapper.GetControllerName(typeof(T)),
+                innerRoute));
+
             //routes.Insert(indexOfFirstNonContentRoute, cr);
             routes.Add(name, cr);
             return cr;

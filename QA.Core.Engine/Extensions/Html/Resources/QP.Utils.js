@@ -58,6 +58,7 @@ if (jQuery.type(QP.Utils) == "undefined") {
                 executeOptions.parentEntityId = entityId;
                 executeOptions.actionUID = actionId;
                 executeOptions.callerCallback = observer.callbackProcName;
+                executeOptions.options = new Quantumart.QP8.Interaction.ArticleFormState();
 
                 return executeOptions;
             },

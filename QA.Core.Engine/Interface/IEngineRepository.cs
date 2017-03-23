@@ -12,6 +12,8 @@ namespace QA.Core.Engine
     {       
         TEntity Get(TKey id);
 
+        AbstractItem[] GetByType<T>() where T : AbstractItem;
+
         TEntity Load(TKey id);
 
         void Delete(TEntity entity);

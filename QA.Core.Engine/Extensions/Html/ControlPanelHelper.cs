@@ -49,7 +49,9 @@ namespace QA.Engine.Extensions.Html
                     .IncludeEmbedded(ControlPanelResourcePath.QPUtilsJSPath, typeof(ControlPanelResourcePath))
                     .IncludeEmbedded(ControlPanelResourcePath.QAEngineEditingJSPath, typeof(ControlPanelResourcePath))
                     .IncludeEmbedded(ControlPanelResourcePath.ControlPanelJSPath, typeof(ControlPanelResourcePath))
-                    .IncludeEmbedded(ControlPanelResourcePath.WidgetItemJSPath, typeof(ControlPanelResourcePath)));
+                    .IncludeEmbedded(ControlPanelResourcePath.WidgetItemJSPath, typeof(ControlPanelResourcePath))
+                    .IncludeEmbedded(ControlPanelResourcePath.QAEngineContentEditorWrapper, typeof(ControlPanelResourcePath))
+                    );
         }
 
         public virtual void Render()
@@ -141,7 +143,7 @@ namespace QA.Engine.Extensions.Html
                         WriteDefinitions(textWriter);
                         using (TagWrapper.Begin("div", textWriter, new { @class = "controls-bottom" }))
                         {
-                            PartUtilities.WriteCommand(textWriter, "готово", "command done",
+                            PartUtilities.WriteCommand(textWriter, "done", "command done",
                                 Url.Parse(Url.Parse(
                                         _helper
                                         .ViewContext

@@ -12,7 +12,7 @@ namespace QA.Core.Engine
     /// Базовый класс для всех страниц и виджетов
     /// </summary>
     [DebuggerDisplay("{Name}#{Id}")]
-    public class AbstractItem : INode, INameable, IInjectable<IUrlParser>, IInjectable<ICultureUrlResolver>, IPlaceable, IUrlFilterable
+    public class AbstractItem : INode, INameable, IInjectable<IUrlParser>, IInjectable<ICultureUrlResolver>, IPlaceable, IUrlFilterable, IDestroyable
     {
         #region Fields
 
@@ -302,7 +302,7 @@ namespace QA.Core.Engine
                 if (_cultureUrlResolver != null)
                 {
                     matchedUrl = _cultureUrlResolver.AddTokensToUrl(matchedUrl,
-                        (Culture == null) ? _cultureUrlResolver.GetCurrentCulture() 
+                        (Culture == null) ? _cultureUrlResolver.GetCurrentCulture()
                                 : Culture.Key.ToLower(),
                         _cultureUrlResolver.GetCurrentRegion());
                 }
@@ -387,9 +387,11 @@ namespace QA.Core.Engine
 
         public AbstractItem()
         {
-            _created = DateTime.Now;
-            _updated = DateTime.Now;
-            _published = DateTime.Now;
+            var now = DateTime.Now;
+            _created = now;
+            _updated = now;
+            _published = now;
+            Loaded = now;
             _children = new ItemList();
             _versions = new ItemList();
             Regions = new RegionCollection();
@@ -858,6 +860,7 @@ namespace QA.Core.Engine
             get;
             set;
         }
+        public DateTime Loaded { get; internal set; }
 
         #endregion
 
@@ -874,6 +877,18 @@ namespace QA.Core.Engine
             }
 
             return (obj as AbstractItem).Id == Id;
+        }
+
+        public void Destroy()
+        {
+            //_details?.Clear();
+            //_children?.Clear();
+            Parent = null;
+            ParentId = null;
+            _cultureUrlResolver = null;
+            //_allRelationsIds?.Clear();
+            _versionOf = null;
+            //Regions?.Clear();
         }
     }
 }

@@ -4,21 +4,21 @@ namespace QA.Core.Engine
 {
     public class ActionResolver : IPathFinder
     {
-        private readonly IControllerMapper controllerMapper;
-        private readonly string[] methods;
+        protected readonly IControllerMapper _controllerMapper;
+        protected readonly string[] _methods;
 
         public ActionResolver(IControllerMapper controllerMapper, string[] methods)
         {
-            this.controllerMapper = controllerMapper;
-            this.methods = methods;
+            this._controllerMapper = controllerMapper;
+            this._methods = methods;
         }
 
         public string[] Methods
         {
-            get { return methods; }
+            get { return _methods; }
         }
 
-        public PathData GetPath(AbstractItem item, string remainingUrl)
+        public virtual PathData GetPath(AbstractItem item, string remainingUrl)
         {
             int slashIndex = remainingUrl.IndexOf('/');
 
@@ -30,11 +30,11 @@ namespace QA.Core.Engine
                 arguments = remainingUrl.Substring(slashIndex + 1);
             }
 
-            var controllerName = controllerMapper.GetControllerName(item.GetContentType());
+            var controllerName = _controllerMapper.GetControllerName(item.GetContentType());
             if (string.IsNullOrEmpty(action) || string.Equals(action, "Default.aspx", StringComparison.InvariantCultureIgnoreCase))
                 action = "Index";
 
-            foreach (string method in methods)
+            foreach (string method in _methods)
             {
                 if (string.Equals(method, action, StringComparison.InvariantCultureIgnoreCase))
                 {

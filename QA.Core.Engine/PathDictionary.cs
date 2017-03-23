@@ -1,5 +1,6 @@
 ﻿// Owners: Karlov Nikolay
 
+using QA.Core.Engine.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -119,6 +120,12 @@ namespace QA.Core.Engine
                     data.StopItem = item;
                     return data;
                 }
+            }
+
+            var greedy = item as IGreedyPage;
+            if(greedy != null)
+            {
+                return new PathData(item, "", "Index", remainingUrl);
             }
 
             return PathData.None(item, remainingUrl);

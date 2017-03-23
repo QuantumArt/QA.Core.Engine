@@ -167,6 +167,7 @@ namespace QA.Core.Engine.FakeImpl
                 }
             }
 
+            // todo сделать выбор по критерию
             var pattern = _config
                 .MatchingPatterns
                 .FirstOrDefault(x => x.UseForReplacing);
@@ -190,14 +191,19 @@ namespace QA.Core.Engine.FakeImpl
         {
             Url url = original;
             List<string> domains = null;
-            List<string> segments = new List<string>();
+            List<string> segments = original.GetSegments().ToList();
+            if (culture == null)
+                culture = pattern.DefaultCultureToken ?? "";
+
+            bool isCultureDefault = culture.Equals(pattern.DefaultCultureToken, StringComparison.OrdinalIgnoreCase);
+            int culturePosition = -1;
 
             if (!string.IsNullOrEmpty(culture))
             {
                 if (pattern.ProcessCultureTokens)
                 {
-                    SetToken(original, pattern.CultureTokenPosition, pattern.IsCultureInAuthority, culture,
-                        ref url, ref domains, segments, culture.Equals(pattern.DefaultCultureToken, StringComparison.OrdinalIgnoreCase));
+                    culturePosition = SetToken(original, pattern.CultureTokenPosition, pattern.IsCultureInAuthority, culture,
+                        ref url, ref domains, segments);
                 }
             }
 
@@ -217,13 +223,18 @@ namespace QA.Core.Engine.FakeImpl
 
             if (segments.Count > 0)
             {
-                url = url.PrependSegment(string.Join("/", segments));
+                if (isCultureDefault && culturePosition >= 0)
+                {
+                    segments.RemoveAt(culturePosition);
+                }
+
+                url = url.SetPath("/" + string.Join("/", segments));
             }
 
             return url;
         }
 
-        private static void SetToken(Url original, int position, bool isInAuthority, string tokenValue,
+        private static int SetToken(Url original, int position, bool isInAuthority, string tokenValue,
             ref Url url, ref List<string> domains, List<string> segments, bool isDefault = false)
         {
             if (isInAuthority)
@@ -248,18 +259,19 @@ namespace QA.Core.Engine.FakeImpl
             }
             else
             {
-                if (isDefault)
-                    return;
-
-                else if (segments.Count > position)
+                if (segments.Count >= position)
                 {
                     segments.Insert(position, tokenValue);
+                    return position;
+
                 }
                 else
                 {
                     segments.Add(tokenValue);
+                    return 0;
                 }
             }
+            return -1;
         }
 
 

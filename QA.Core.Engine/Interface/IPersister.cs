@@ -11,6 +11,8 @@ namespace QA.Core.Engine
 
         T Get<T>(int id) where T : AbstractItem;
 
+        AbstractItem[] Get<T>() where T : AbstractItem;
+
         void Save(AbstractItem unsavedItem, bool forcePublish);
 
         void Delete(AbstractItem itemNoMore);

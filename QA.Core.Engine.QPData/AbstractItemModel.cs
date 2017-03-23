@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using QA.Core.Collections;
+using QA.Core.Engine.Interface;
 
 namespace QA.Core.Engine.QPData
 {
@@ -7,7 +9,7 @@ namespace QA.Core.Engine.QPData
     /// Модель, хранящая DTO структуры сайта.
     /// Должна быть RequestLocal
     /// </summary>
-    public class AbstractItemModel<TKey, TNode>
+    public class AbstractItemModel<TKey, TNode> : IDisposable
     {
         private ReadOnlyDictionary<TKey, TNode> _readOnlyItems;
         private Dictionary<TKey, TNode> _items;
@@ -26,6 +28,21 @@ namespace QA.Core.Engine.QPData
             _items = new Dictionary<TKey, TNode>();
             _readOnlyItems = new ReadOnlyDictionary<TKey, TNode>(_items);
 
+        }
+
+        public void Dispose()
+        {
+            foreach(var item in _items.Values)
+            {
+                var disposable = item as IDestroyable;
+                if(disposable != null)
+                {
+                    disposable.Destroy();
+                }
+
+                //_items.Clear();
+                Root = default(TNode);
+            }
         }
     }
 }

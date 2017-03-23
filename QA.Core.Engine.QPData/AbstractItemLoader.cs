@@ -62,12 +62,11 @@ namespace QA.Core.Engine.QPData
                 _engine.Resolve<ILogger>().ErrorException("Resolving type in AbstractItemLoader is failed. ", ex);
             }
 
-            var items = Model.ItemsInternal;
             var locker = Model.Locker;
 
             var newItems = new Dictionary<int, AbstractItem>();
             var groupedIds = new Dictionary<int, Dictionary<int, object>>();
-
+            var now = DateTime.Now;
             // process loading into newItems
 
             // TODO: use unitOfWorks
@@ -189,6 +188,7 @@ namespace QA.Core.Engine.QPData
                         newItems.Add(newItem.Id, newItem);
                         newItem.Created = item.Value.Created;
                         newItem.Updated = item.Value.Modified;
+                        newItem.Loaded = now;
 
                         if (!string.IsNullOrWhiteSpace(item.Value.AllowedUrlPatterns))
                         {
@@ -228,7 +228,7 @@ namespace QA.Core.Engine.QPData
                 using (SqlConnection con = new SqlConnection(conStr))
                 {
                     con.Open();
-                    SqlCommand sqlCmd = new SqlCommand("dbo.qa_beeline_extend_items", con);
+                    SqlCommand sqlCmd = new SqlCommand("dbo.qa_extend_items", con);
 
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
@@ -295,13 +295,18 @@ namespace QA.Core.Engine.QPData
 
                         }
 
+                        if (item.Details.Keys.Contains(column.ColumnName))
+                        {
+                            throw new InvalidOperationException($"Extension article has incorrect format. The column ${column.ColumnName} already exists. Article id: {item.Id}");
+                        }
+
                         item.Details.Add(column.ColumnName, value is DBNull ? null : value);
 
                         if (value is decimal
                             && def.NeedLoadM2MRelationsIds
                             && String.Compare(column.ColumnName, "CONTENT_ITEM_ID", true) == 0)
                         {
-                            needLoadM2MItems.Add(item.GetDetail<int>("CONTENT_ITEM_ID", 0), item);
+                            needLoadM2MItems[item.GetDetail<int>("CONTENT_ITEM_ID", 0)] = item;
                         }
                     }
                 }
@@ -340,25 +345,28 @@ namespace QA.Core.Engine.QPData
 
             lock (locker)
             {
+                var items = Model.ItemsInternal;
+                AbstractItem root = null;
                 items.Clear();
                 foreach (var item in newItems)
                 {
                     items.Add(item.Key, item.Value);
 
                     // set the root
-                    if (Model.Root == null && (item.Value.ParentId == null
+                    if (root != null && item.Value.ParentId == null
                         || item.Value.ParentId == item.Value.Id
-                        || item.Value.ParentId == 0))
+                        || item.Value.ParentId == 0)
                     {
-                        Model.Root = item.Value;
+                        root = item.Value;
                     }
                 }
+                Model.Root = root;
             }
         }
 
         protected void LoadM2MRelationsIds(Dictionary<int, AbstractItem> mapItemsToContentItemIDs)
         {
-            SqlCommand cmd = new SqlCommand("dbo.qa_beeline_extend_items_m2m");
+            SqlCommand cmd = new SqlCommand("dbo.qa_extend_items_m2m");
             cmd.CommandType = CommandType.StoredProcedure;
             SqlParameter tvpParam = cmd.Parameters.AddWithValue("@Ids",
                 mapItemsToContentItemIDs.Keys.CreateSqlDataRecords()

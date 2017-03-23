@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Web.Routing;
 
 namespace QA.Core.Engine
 {
@@ -109,6 +110,24 @@ namespace QA.Core.Engine
 
         AbstractItem currentPage;
         AbstractItem currentItem;
+
+        private readonly RouteData _routeData;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="routeData">значения маршрутизации, полученные у innerRoute</param>
+        public PathData(AbstractItem item, string templateUrl, RouteData routeData)
+        {
+            _routeData = routeData;
+            if (item != null)
+            {
+                CurrentItem = item;
+                Id = item.Id;
+            }
+            TemplateUrl = templateUrl;
+            Action = routeData.Values["action"].ToString();
+        }
 
         public PathData(AbstractItem item, string templateUrl, string action, string arguments)
             : this()
@@ -280,5 +299,13 @@ namespace QA.Core.Engine
         public string RegionToken { get; set; }
 
         public Url TrailedUrl { get; set; }
+
+        public RouteData RouteData
+        {
+            get
+            {
+                return _routeData;
+            }
+        }
     }
 }

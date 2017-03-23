@@ -15,7 +15,7 @@ namespace QA.Core.Engine.FakeImpl
         {
             get
             {
-                return _empty;
+                return new UrlMatchingResult();
             }
         }
 

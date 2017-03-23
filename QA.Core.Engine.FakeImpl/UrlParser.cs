@@ -9,7 +9,11 @@ using QA.Core.Web;
 
 namespace QA.Core.Engine.Data
 {
-    public class FakeUrlParser : IUrlParser
+    [Obsolete("Use UrlParser instead.")]
+    public class FakeUrlParser : UrlParser {
+        FakeUrlParser(IEngine engine) : base(engine) { }
+    }
+    public class UrlParser : IUrlParser
     {
         public event EventHandler<PageNotFoundEventArgs> PageNotFound;
         private static RequestLocal<AbstractItem> _startPage = new RequestLocal<AbstractItem>();
@@ -66,7 +70,7 @@ namespace QA.Core.Engine.Data
             get { return _startPageProvider.GetRootPageId(); }
         }
 
-        public FakeUrlParser(IEngine engine)
+        public UrlParser(IEngine engine)
         {
             _cultureResolver = engine.Resolve<ICultureUrlResolver>();
             _engine = engine;

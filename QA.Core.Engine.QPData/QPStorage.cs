@@ -9,7 +9,7 @@ namespace QA.Core.Engine.QPData
 {
     /// <summary>
     /// Провайдер доступа к данным структуры сайта.
-    /// Должен быть RequestLocal<T>
+    /// Должен быть RequestLocal'T
     /// </summary>
     public class QPStorage : IEngineRepository<int, AbstractItem>
     {
@@ -52,6 +52,29 @@ namespace QA.Core.Engine.QPData
             }
 
             return result;
+        }
+
+        public virtual AbstractItem[] GetByType<T>() where T : AbstractItem
+        {
+            // модель еще не была инициализирована
+            // во время обработки текущего запроса
+            if (Model.Root == null)
+            {
+                // TODO: проинициализировать модель всей структурой сайта для данных региона и культуры
+                // use service for this
+
+                ReloadAll();
+            }
+
+            if (!Model.Items.Values
+                .Any(a => a is T))
+            {
+                return null;
+            }
+
+            return Model.Items.Values
+                .Where(w => w is T)
+                .ToArray();
         }
 
         public virtual void ReloadAll()
@@ -133,7 +156,12 @@ namespace QA.Core.Engine.QPData
 
         public virtual void Dispose()
         {
-            //throw new NotImplementedException();
+            Model.Dispose();
+        }
+
+        ~QPStorage()
+        {
+            Dispose();
         }
     }
 }

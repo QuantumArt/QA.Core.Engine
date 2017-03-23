@@ -2,7 +2,15 @@
 
 namespace QA.Core.Engine.Data
 {
-    public class FakePersister : IPersister
+    [Obsolete("Use Persister instead")]
+    public class FakePersister : Persister
+    {
+        public FakePersister(IEngineRepository<int, AbstractItem> repository) : base(repository)
+        {
+        }
+    }
+
+    public class Persister : IPersister
     {
         private IEngineRepository<int, AbstractItem> _repositrory;
         public IEngineRepository<int, AbstractItem> Repository
@@ -10,7 +18,7 @@ namespace QA.Core.Engine.Data
             get { return _repositrory; }
         }
 
-        public FakePersister(IEngineRepository<int, AbstractItem> repository)
+        public Persister(IEngineRepository<int, AbstractItem> repository)
         {
             _repositrory = repository;
         }
@@ -20,6 +28,13 @@ namespace QA.Core.Engine.Data
             var item = Repository.Get(id);
 
             return item;
+        }
+
+        public AbstractItem[] Get<T>() where T: AbstractItem
+        {
+            var items = Repository.GetByType<T>();
+
+            return items;
         }
 
         public T Get<T>(int id) where T : AbstractItem
@@ -56,7 +71,7 @@ namespace QA.Core.Engine.Data
         {
             var loadedSource = _repositrory.Get(source.Id);
             var loadedDest = _repositrory.Get(destination.Id);
-            
+
             if (loadedSource.Parent != null)
             {
                 loadedSource.Parent.Children.Remove(loadedSource.Parent);
@@ -70,12 +85,12 @@ namespace QA.Core.Engine.Data
 
         public virtual void Flush()
         {
-            Repository.Flush();
+            //Repository.Flush();
         }
 
         public void Dispose()
         {
-            Repository.Dispose();
+            //Repository.Dispose();
         }
     }
 }

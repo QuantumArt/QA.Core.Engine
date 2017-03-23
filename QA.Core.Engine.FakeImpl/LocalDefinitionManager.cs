@@ -53,7 +53,7 @@ namespace QA.Core.Engine.Data
 
         private IEnumerable<ItemDefinition> GetItems()
         {
-            var itemDefinitions = PrepareItems().ToList();
+            var itemDefinitions = PrepareItems().ToArray();
 
             // TODO учесть наследование при формировании списков
 
@@ -107,8 +107,11 @@ namespace QA.Core.Engine.Data
             return itemDefinitions;
         }
 
-
         protected virtual IEnumerable<ItemDefinition> PrepareItems()
+        {
+            return PrepareItemsInternal().ToArray();
+        }
+        protected virtual IEnumerable<ItemDefinition> PrepareItemsInternal()
         {
             var items = _typeFinder.Find(typeof(AbstractItem))
                .Where(x => !x.IsAbstract && x.IsClass && x.IsPublic && x != typeof(AbstractItem));

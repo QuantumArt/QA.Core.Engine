@@ -1,6 +1,7 @@
 ﻿// Owners: Karlov Nikolay
 
 using System;
+using System.Collections.Generic;
 
 namespace QA.Core.Engine
 {
@@ -9,5 +10,9 @@ namespace QA.Core.Engine
         string GetControllerName(Type type);
 
         bool ControllerHasAction(string controllerName, string actionName);
+
+        IEnumerable<string> GetActionsFor<T>() where T : AbstractItem;
+
+        IEnumerable<string> GetActionsForItemType(Type itemType);
     }
 }
