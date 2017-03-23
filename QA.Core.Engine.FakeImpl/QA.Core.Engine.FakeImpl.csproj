@@ -142,6 +142,7 @@
   <ItemGroup>
     <Compile Include="CultureUrlParserConfig.cs" />
     <Compile Include="CultureUrlResolver.cs" />
+    <Compile Include="CultureUrlResolverMatcher.cs" />
     <Compile Include="FakeControllerMapper.cs" />
     <Compile Include="LocalDefinitionManager.cs" />
     <Compile Include="FakeEditUrlManager.cs" />

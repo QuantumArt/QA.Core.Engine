@@ -30,7 +30,7 @@ namespace QA.Core.Engine
             _propertyName = propertyName;
         }
 
-        string ILoaderOption.Process(Quantumart.QPublishing.Database.DBConnector cnn, QPContext ctx, string value)
+        string ILoaderOption.Process(IDBConnector cnn, QPContext ctx, string value)
         {
             return value;
         }

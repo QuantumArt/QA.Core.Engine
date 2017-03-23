@@ -31,6 +31,8 @@ public partial class QPContext
 
    if (instance.IsPage != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "IsPage"), ((bool)instance.IsPage) ? "1" : "0"); }
 
+   if (instance.Regions != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Regions"), instance.RegionsString); }
+
    if (instance.ZoneName != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "ZoneName"), ReplaceUrls(instance.ZoneName)); }
 
    if (instance.AllowedUrlPatterns != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "AllowedUrlPatterns"), ReplaceUrls(instance.AllowedUrlPatterns)); }
@@ -60,6 +62,10 @@ public partial class QPContext
    if (instance.IndexOrder != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "IndexOrder"), instance.IndexOrder.ToString()); }
 
    if (instance.ExtensionId != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "ExtensionId"), instance.ExtensionId.ToString()); }
+
+   if (instance.AuthenticationTargeting != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "AuthenticationTargeting"), ReplaceUrls(instance.AuthenticationTargeting)); }
+
+   if (instance.Targeting != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Targeting"), ReplaceUrls(instance.Targeting)); }
 
 		return Values;
 	}
@@ -94,7 +100,7 @@ public partial class QPContext
 	partial void DeleteQPAbstractItem(QPAbstractItem instance)
 	{
 		
-		Cnn.ExternalTransaction = Transaction;	
+		Cnn.ExternalTransaction = Transaction;
 		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
 				
 	}
@@ -118,6 +124,8 @@ public partial class QPContext
    if (instance.IsPage != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "IsPage"), ((bool)instance.IsPage) ? "1" : "0"); }
 
    if (instance.AllowedZones != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "AllowedZones"), ReplaceUrls(instance.AllowedZones)); }
+
+   if (instance.AllowedItemDefinitions1 != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "AllowedItemDefinitions1"), instance.AllowedItemDefinitions1String); }
 
    if (instance.FilterPartByUrl != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "FilterPartByUrl"), ((bool)instance.FilterPartByUrl) ? "1" : "0"); }
 
@@ -154,7 +162,7 @@ public partial class QPContext
 	partial void DeleteQPDiscriminator(QPDiscriminator instance)
 	{
 		
-		Cnn.ExternalTransaction = Transaction;	
+		Cnn.ExternalTransaction = Transaction;
 		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
 				
 	}
@@ -202,7 +210,7 @@ public partial class QPContext
 	partial void DeleteQPCulture(QPCulture instance)
 	{
 		
-		Cnn.ExternalTransaction = Transaction;	
+		Cnn.ExternalTransaction = Transaction;
 		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
 				
 	}
@@ -248,7 +256,7 @@ public partial class QPContext
 	partial void DeleteItemTitleFormat(ItemTitleFormat instance)
 	{
 		
-		Cnn.ExternalTransaction = Transaction;	
+		Cnn.ExternalTransaction = Transaction;
 		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
 				
 	}
@@ -338,7 +346,7 @@ public partial class QPContext
 	partial void DeleteQPObsoleteUrl(QPObsoleteUrl instance)
 	{
 		
-		Cnn.ExternalTransaction = Transaction;	
+		Cnn.ExternalTransaction = Transaction;
 		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
 				
 	}
@@ -386,7 +394,7 @@ public partial class QPContext
 	partial void DeleteQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
 	{
 		
-		Cnn.ExternalTransaction = Transaction;	
+		Cnn.ExternalTransaction = Transaction;
 		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
 				
 	}
@@ -394,47 +402,27 @@ public partial class QPContext
 
 	partial void InsertAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
 	{
-		Cnn.ExternalTransaction = Transaction;
-		int linkId = Cnn.GetLinkIdByNetName(SiteId, "AbstractItemAbtractItemRegionArticle");
-		
-		if (linkId == 0)
-			throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "AbstractItemAbtractItemRegionArticle", SiteId));
-			
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'if not exists(select * from item_link where link_id = @linkId and item_id = @itemId and linked_item_id = @linkedItemId) insert into item_to_item values(@linkId, @itemId, @linkedItemId)', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", linkId, instance.ITEM_ID, instance.LINKED_ITEM_ID));
 	}
 
 	partial void UpdateAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
 	{
-	
 	}
 
 	partial void DeleteAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
 	{
-		Cnn.ExternalTransaction = Transaction;
-		Cnn.ProcessData(instance.RemovingInstruction);
 	}
     
 
 	partial void InsertItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
 	{
-		Cnn.ExternalTransaction = Transaction;
-		int linkId = Cnn.GetLinkIdByNetName(SiteId, "ItemDefinitionItemDefinitionArticle");
-		
-		if (linkId == 0)
-			throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "ItemDefinitionItemDefinitionArticle", SiteId));
-			
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'if not exists(select * from item_link where link_id = @linkId and item_id = @itemId and linked_item_id = @linkedItemId) insert into item_to_item values(@linkId, @itemId, @linkedItemId)', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", linkId, instance.ITEM_ID, instance.LINKED_ITEM_ID));
 	}
 
 	partial void UpdateItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
 	{
-	
 	}
 
 	partial void DeleteItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
 	{
-		Cnn.ExternalTransaction = Transaction;
-		Cnn.ProcessData(instance.RemovingInstruction);
 	}
     
 

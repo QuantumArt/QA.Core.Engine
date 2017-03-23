@@ -18,7 +18,7 @@ namespace QA.Core.Engine.Data
 
         private bool loadAppDomainAssemblies = true;
 
-        private string assemblySkipLoadingPattern = "^QA.Core.Data|^System|^mscorlib|^Microsoft|^EntityFramework|^CppCodeProvider|^VJSharpCodeProvider|^WebDev|^nlog|^Iesi|^log4net|^MbUnit|^Rhino|^QuickGraph|^TestFu|^Telerik|^ComponentArt|^MvcContrib|^AjaxControlToolkit|^Antlr3|^Remotion|^Recaptcha|^Lucene|^Ionic|^Spark|^SharpArch|^CommonServiceLocator|^Newtonsoft|^SMDiagnostics|^App_LocalResources|^AntiXSSLibrary|^HtmlSanitizationLibrary|^sqlce|^WindowsBase|^DynamicProxyGenAssembly|^Anonymously Hosted DynamicMethods Assembly";
+        private string assemblySkipLoadingPattern = "^FluentValidation|^QA.Core.Data|^System|^mscorlib|^Microsoft|^EntityFramework|^CppCodeProvider|^VJSharpCodeProvider|^WebDev|^nlog|^Iesi|^log4net|^MbUnit|^Rhino|^QuickGraph|^TestFu|^Telerik|^ComponentArt|^MvcContrib|^AjaxControlToolkit|^Antlr3|^Remotion|^Recaptcha|^Lucene|^Ionic|^Spark|^SharpArch|^CommonServiceLocator|^Newtonsoft|^SMDiagnostics|^App_LocalResources|^AntiXSSLibrary|^HtmlSanitizationLibrary|^sqlce|^WindowsBase|^DynamicProxyGenAssembly|^Anonymously Hosted DynamicMethods Assembly";
 
         private string assemblyRestrictToLoadingPattern = ".*";
         private IList<string> assemblyNames = new List<string>();

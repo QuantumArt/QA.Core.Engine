@@ -141,7 +141,7 @@ namespace QA.Engine.Extensions.Html
                         WriteDefinitions(textWriter);
                         using (TagWrapper.Begin("div", textWriter, new { @class = "controls-bottom" }))
                         {
-                            PartUtilities.WriteCommand(textWriter, "готово", "command done",
+                            PartUtilities.WriteCommand(textWriter, "done", "command done",
                                 Url.Parse(Url.Parse(
                                         _helper
                                         .ViewContext

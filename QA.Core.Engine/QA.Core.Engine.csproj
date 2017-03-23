@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionResolver.cs" />
+    <Compile Include="AuthorizationTargeting.cs" />
     <Compile Include="Collections\ContentList.cs" />
     <Compile Include="Collections\DetailCollection.cs">
       <SubType>Code</SubType>
@@ -187,6 +188,7 @@
     <Compile Include="Editing\Controllers\FieldToSetModel.cs" />
     <Compile Include="Editing\FieldConstants.cs" />
     <Compile Include="Editing\IAbstractItemFieldNameResolver.cs" />
+    <Compile Include="EmptyCultureUrlResolver.cs" />
     <Compile Include="Filters\UrlPartFilter.cs" />
     <Compile Include="Interface\ICultureUrlResolver.cs" />
     <Compile Include="Interface\IEngine.cs" />

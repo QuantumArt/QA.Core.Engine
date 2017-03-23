@@ -58,7 +58,9 @@ namespace QA.Core.Engine
 
             if (vpd != null)
             {
-                vpd.VirtualPath = vpd.VirtualPath.ToLower();
+	            Url url = vpd.VirtualPath;
+
+				vpd.VirtualPath = url.SetPath(url.Path.ToLower());
             }
 
             return vpd;

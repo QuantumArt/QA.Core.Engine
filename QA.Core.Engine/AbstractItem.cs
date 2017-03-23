@@ -5,6 +5,7 @@ using System.Web;
 using QA.Core.Engine.Collections;
 using QA.Core.Engine.Interface;
 using QA.Core.Engine.Web;
+using System.Runtime.CompilerServices;
 
 namespace QA.Core.Engine
 {
@@ -34,6 +35,7 @@ namespace QA.Core.Engine
         private IUrlParser _urlParser;
         private DetailCollection _details;
         private Dictionary<int, List<int>> _allRelationsIds;
+        private static ItemFilter _pathFilter = new NullFilter();
 
         #endregion
 
@@ -58,6 +60,17 @@ namespace QA.Core.Engine
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Отвечает за отображение в меню.
+        /// В отдельных случаях обработчик страницы может не допускать доступ неавторизованным пользователям
+        /// </summary>
+        public AuthorizationTargeting Access { get; set; }
+
+        /// <summary>
+        /// Таргетирование по некоторым параметрам (ШПД/МОБ и тд)
+        /// </summary>
+        public string Targeting { get; set; }
 
         /// <summary>
         /// Список регионов, в которых отображается элемент
@@ -413,7 +426,7 @@ namespace QA.Core.Engine
             int slashIndex = remainingUrl.IndexOf('/');
             string nameSegment = HttpUtility.UrlDecode(slashIndex < 0 ? remainingUrl : remainingUrl.Substring(0, slashIndex));
 
-            var child = GetChildren(new VersioningFilter(region, culture))
+            var child = GetChildren(new AllFilter(_pathFilter, new VersioningFilter(region, culture)))
                 .FindNamed(nameSegment);
 
             if (child != null)
@@ -553,13 +566,25 @@ namespace QA.Core.Engine
         }
 
         /// <summary>
+        /// Получает значение на основе данных об имени вызывающего метода (свойства)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="defaultValue"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public virtual T GetValue<T>(T defaultValue, [CallerMemberName] string name="")
+        {
+            return GetDetail<T>(name, defaultValue);
+        }
+
+        /// <summary>
         /// Получение свойств расширения
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="name">имя</param>
         /// <param name="defaultValue">значение по умолчани</param>
         /// <returns></returns>
-        public T GetDetail<T>(string name, T defaultValue)
+        public virtual T GetDetail<T>(string name, T defaultValue)
         {
             if (!Details.ContainsKey(name))
             {
@@ -579,7 +604,7 @@ namespace QA.Core.Engine
         /// <summary>
         /// Получение свойств расширения
         /// </summary>
-        public object GetDetail(string name, Type type)
+        public virtual object GetDetail(string name, Type type)
         {
             var value = Details[name];
             if (type == typeof(string))
@@ -620,7 +645,7 @@ namespace QA.Core.Engine
         /// <typeparam name="T"></typeparam>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public void SetDetail<T>(string name, T value)
+        public virtual void SetDetail<T>(string name, T value)
         {
             SetDetail(name, typeof(T), value);
         }
@@ -628,7 +653,7 @@ namespace QA.Core.Engine
         /// <summary>
         /// Установка значения дополнительнорму параметру
         /// </summary>
-        public void SetDetail(string name, Type t, object value)
+        public virtual void SetDetail(string name, Type t, object value)
         {
             switch (name)
             {
@@ -874,6 +899,15 @@ namespace QA.Core.Engine
             }
 
             return (obj as AbstractItem).Id == Id;
+        }
+
+        /// <summary>
+        /// Устанавливает дополнительный фильтр по для роутинга
+        /// </summary>
+        /// <param name="pathFilter"></param>
+        public static void SetPathFilter(ItemFilter pathFilter)
+        {
+            _pathFilter = pathFilter;
         }
     }
 }

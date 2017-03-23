@@ -11,6 +11,6 @@ namespace QA.Core.Engine.QPData
         Type Type { get; }
         string PropertyName { get; }
         void AttachTo(Type type, string propertyName);
-        string Process(DBConnector cnn, QPContext ctx,  string value);
+        string Process(IDBConnector cnn, QPContext ctx, string value);
     }
 }

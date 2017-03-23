@@ -189,6 +189,7 @@ namespace QA.Core.Engine.Tests
         }
 
         [TestMethod]
+        [TestCategory("Issues")]
         public void Test_RegionMatcher_replace_segments()
         {
             lock (Locker.ForType<Url>())
@@ -263,6 +264,35 @@ namespace QA.Core.Engine.Tests
                 Assert.AreEqual("http://moskovskaya-obl.bee.ru/qwerty", result.SanitizedUrl.ToString());
 
                 var url = matcher.ReplaceTokens("http://moskovskaya-obl.bee.ru/ru-ru/qwerty", regions, cultures, "ru-ru", "spb", true);
+            }
+        }
+
+        [TestMethod]
+        public void Test_RegionMatcher_dns_positive_issue2()
+        {
+            lock (Locker.ForType<Url>())
+            {
+                var config = new CultureUrlParserConfig();
+
+                config.MatchingPatterns.Add(
+                    new UrlMatchingPattern
+                    {
+                        Value = "{region}.bee.ru/{culture}",
+                        DefaultCultureToken = "ru-ru"
+                    });
+
+                UrlTokenMatcher matcher = new UrlTokenMatcher(config);
+
+                var regions = new string[] { "moskovskaya-obl", "spb" };
+                var cultures = new string[] { "ru-ru", "en-us" };
+
+                var result = matcher.Match("http://moskovskaya-obl.bee.ru/ru-ru/qwerty", regions, cultures);
+                Assert.IsTrue(result.IsMatch);
+                Assert.AreEqual("ru-ru", result.Culture);
+                Assert.AreEqual("moskovskaya-obl", result.Region);
+                Assert.AreEqual("http://moskovskaya-obl.bee.ru/qwerty", result.SanitizedUrl.ToString());
+
+                var url = matcher.ReplaceTokens("http://moskovskaya-obl.bee.ru/ru-ru/qwerty", regions, cultures, null, "spb", true);
             }
         }
 

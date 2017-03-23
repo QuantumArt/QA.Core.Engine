@@ -146,6 +146,9 @@
     <Compile Include="AbstractItemLoader.cs" />
     <Compile Include="AbstractItemModel.cs" />
     <Compile Include="CombinedDefinitionManager.cs" />
+    <Compile Include="Context\QPContext.Helpers.cs" />
+    <Compile Include="DBConnectorWrapper.cs" />
+    <Compile Include="IDBConnector.cs" />
     <Compile Include="ILoaderOption.cs" />
     <Compile Include="ReplacePlaceholdersAttribute.cs" />
     <Compile Include="QPStorage.cs" />
@@ -177,9 +180,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Collections\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\QA.Core.Engine.FakeImpl\QA.Core.Engine.FakeImpl.csproj">
       <Project>{ace2403c-55ca-442c-8445-8c673433e3f1}</Project>

@@ -16,7 +16,10 @@ namespace QA.Core.Engine.Data
         static string DefaultCultureToken = "ru-ru";
         static RequestLocal<UrlMatchingResult> _currentResult = new RequestLocal<UrlMatchingResult>();
         static RequestLocal<bool> _isResolved = new RequestLocal<bool>();
-        protected static string[] _cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).Select(x => x.Name.ToLower()).ToArray();
+        protected static string[] _cultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
+            .Select(x => x.Name.ToLower())
+            .Where(x => x.Length == 5)
+            .ToArray();
 
         protected virtual UrlTokenMatcher GetMatcher()
         {
@@ -59,9 +62,17 @@ namespace QA.Core.Engine.Data
 
         public virtual Url ResolveCulture(Url url, out string cultureToken, out string regionToken, bool replaceUrl)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             var matcher = GetMatcher();
 
-            var result = matcher.Match(url, GetRegionCodes(), GetValidCultures(), true);
+            var codes = GetRegionCodes();
+
+            var result = matcher.Match(url, codes, GetValidCultures(), true);
+
+            regionToken = null;
+            cultureToken = null;
 
             _isResolved.Value = true;
             _currentResult.Value = result;
@@ -69,31 +80,51 @@ namespace QA.Core.Engine.Data
             if (result.IsMatch)
             {
                 regionToken = result.Region;
-
-                var queryToken = url.GetQuery(PathData.CultureQueryKey);
-
-                if (!string.IsNullOrWhiteSpace(queryToken))
-                {
-                    if (ContentRoute.TokenPattern.IsMatch(queryToken))
-                    {
-                        result.Culture = queryToken.Trim();
-                    }
-                }
-
                 cultureToken = result.Culture;
+
+                CheckOverrides(url, ref result, ref cultureToken, ref regionToken);
+
+                if (result.SanitizedUrl == null)
+                    throw new ArgumentNullException("result.SanitizedUrl", string.Format("{0}: {1}",
+                        url,
+                        new { result, cultureToken, regionToken, result.IsMatch }));
+
                 return result.SanitizedUrl;
             }
-
-
-            regionToken = null;
-            cultureToken = null;
+            else
+            {
+                CheckOverrides(url, ref result, ref cultureToken, ref regionToken);
+            }
 
             return url;
+        }
+
+        private void CheckOverrides(Url url, ref UrlMatchingResult result, ref string cultureToken, ref string regionToken)
+        {
+            var cqueryToken = (url.GetQuery(PathData.CultureQueryKey) ?? "").ToLower();
+            var rqueryToken = (url.GetQuery(PathData.RegionQueryKey) ?? "").ToLower();
+
+            if (!string.IsNullOrWhiteSpace(cqueryToken) && GetValidCultures().Contains(cqueryToken))
+            {
+                cultureToken = cqueryToken;
+                result.IsMatch = true;
+                result.Culture = cqueryToken;
+            }
+
+            if (!string.IsNullOrWhiteSpace(rqueryToken) && GetRegionCodes().Contains(rqueryToken))
+            {
+                regionToken = rqueryToken;
+                result.IsMatch = true;
+                result.Region = rqueryToken;
+            }
         }
 
 
         public virtual Url ResolveCultureReusable(Url url, out string cultureToken, out string regionToken, bool replaceUrl)
         {
+            if (url == null)
+                throw new ArgumentNullException("url", "before");
+
             var matcher = GetMatcher();
 
             var result = matcher.Match(url, GetRegionCodes(), GetValidCultures(), true);
@@ -101,18 +132,10 @@ namespace QA.Core.Engine.Data
             if (result.IsMatch)
             {
                 regionToken = result.Region;
-
-                var queryToken = url.GetQuery(PathData.CultureQueryKey);
-
-                if (!string.IsNullOrWhiteSpace(queryToken))
-                {
-                    if (ContentRoute.TokenPattern.IsMatch(queryToken))
-                    {
-                        result.Culture = queryToken.Trim();
-                    }
-                }
-
                 cultureToken = result.Culture;
+
+                CheckOverrides(url, ref result, ref cultureToken, ref regionToken);
+
                 return result.SanitizedUrl;
             }
 
@@ -125,11 +148,15 @@ namespace QA.Core.Engine.Data
 
         public virtual Url AddTokensToUrl(Url originalUrl, string cultureToken, string regionToken)
         {
+            Throws.IfArgumentNullOrEmpty(originalUrl, _ => originalUrl);
+
             return AddTokensToUrl(originalUrl, cultureToken, regionToken, false);
         }
 
         public virtual Url AddTokensToUrl(Url originalUrl, string cultureToken, string regionToken, bool sanitize)
         {
+            Throws.IfArgumentNullOrEmpty(originalUrl, _ => originalUrl);
+
             var matcher = GetMatcher();
 
             return matcher.ReplaceTokens(originalUrl, GetRegionCodes(), GetValidCultures(), cultureToken, regionToken, sanitize);

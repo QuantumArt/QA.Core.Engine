@@ -7,15 +7,12 @@ namespace QA.Core.Engine.FakeImpl
 {
     public class UrlMatchingResult
     {
-        private static readonly UrlMatchingResult _empty = new UrlMatchingResult()
-        {
-        };
 
         public static UrlMatchingResult Empty
         {
             get
             {
-                return _empty;
+                return new UrlMatchingResult();
             }
         }
 

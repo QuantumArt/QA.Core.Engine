@@ -41,6 +41,8 @@
       <Column Name="[IsInSiteMap]" Member="IsInSiteMap" Storage="_IsInSiteMap" DbType="Decimal(18,0)" />
       <Column Name="[IndexOrder]" Member="IndexOrder" Storage="_IndexOrder" DbType="Decimal(38,0)" />
       <Column Name="[ExtensionId]" Member="ExtensionId" Storage="_ExtensionId" DbType="Decimal(38,0)" />
+      <Column Name="[AuthenticationTargeting]" Member="AuthenticationTargeting" Storage="_AuthenticationTargeting" DbType="NVarChar(255)" />
+      <Column Name="[Targeting]" Member="Targeting" Storage="_Targeting" DbType="NVarChar(255)" />
       <Association Name="Parent_QPAbstractItem" Member="Parent" Storage="_Parent1" ThisKey="Parent_ID" OtherKey="Id" IsForeignKey="true" />
       <Association Name="Discriminator_QPAbstractItem" Member="Discriminator" Storage="_Discriminator1" ThisKey="Discriminator_ID" OtherKey="Id" IsForeignKey="true" />
       <Association Name="VersionOf_QPAbstractItem" Member="VersionOf" Storage="_VersionOf1" ThisKey="VersionOf_ID" OtherKey="Id" IsForeignKey="true" />

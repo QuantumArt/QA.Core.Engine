@@ -195,6 +195,9 @@ namespace QA.Core.Engine.Data
 
             Url requestedUrl = url;
 
+            if (requestedUrl == null)
+                throw new ArgumentNullException("requestedUrl", "just check");
+
             // todo: resolve region and culture
             if (_cultureResolver != null)
             {
@@ -206,6 +209,12 @@ namespace QA.Core.Engine.Data
                 {
                     requestedUrl = _cultureResolver.ResolveCulture(requestedUrl, out currentCultureToken, out currentRegionToken, true);
                 }
+
+                if (requestedUrl == null)
+                    throw new ArgumentNullException("requestedUrl", string.Format("reusable: {0}, url: {1}; resolver {2}",
+                        reusable,
+                        url,
+                        _cultureResolver));
             }
 
             AbstractItem item = TryLoadingFromQueryString(requestedUrl, PathData.ItemQueryKey);
@@ -290,6 +299,9 @@ namespace QA.Core.Engine.Data
 
         public virtual AbstractItem Parse(string url)
         {
+            if (url == null)
+                throw new ArgumentNullException("url");
+
             if (string.IsNullOrEmpty(url)) return null;
 
             var requestedUrl = new Url(url);
@@ -300,6 +312,8 @@ namespace QA.Core.Engine.Data
             if (_cultureResolver != null)
             {
                 requestedUrl = _cultureResolver.ResolveCulture(requestedUrl, out token1, out token2, true);
+                if (requestedUrl == null)
+                    throw new ArgumentNullException("requestedUrl");
             }
 
             AbstractItem startingPoint = GetStartPage(requestedUrl);
@@ -327,6 +341,10 @@ namespace QA.Core.Engine.Data
         #region Parse Helper Methods
         protected virtual AbstractItem TryLoadingFromQueryString(string url, params string[] parameters)
         {
+            if (url == null)
+            {
+                throw new ArgumentNullException("url");
+            }
             int? itemID = FindQueryStringReference(url, parameters);
             if (itemID.HasValue)
                 return _engine.Persister.Get(itemID.Value);

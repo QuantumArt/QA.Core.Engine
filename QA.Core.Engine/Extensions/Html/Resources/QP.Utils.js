@@ -51,6 +51,7 @@ if (jQuery.type(QP.Utils) == "undefined") {
             },
 
             initOptions: function (action, type, itemId, entityId, actionId, observer) {
+
                 var executeOptions = new Quantumart.QP8.Interaction.ExecuteActionOtions();
                 executeOptions.actionCode = action;
                 executeOptions.entityTypeCode = type;
@@ -58,6 +59,7 @@ if (jQuery.type(QP.Utils) == "undefined") {
                 executeOptions.parentEntityId = entityId;
                 executeOptions.actionUID = actionId;
                 executeOptions.callerCallback = observer.callbackProcName;
+                executeOptions.options = new Quantumart.QP8.Interaction.ArticleFormState();
 
                 return executeOptions;
             },
@@ -71,6 +73,7 @@ if (jQuery.type(QP.Utils) == "undefined") {
                 executeOptions.selectWindowUID = actionId;
                 executeOptions.callerCallback = observer.callbackProcName;
                 executeOptions.selectedEntityIDs = selectedEntityIDs;
+                executeOptions.options = new Quantumart.QP8.Interaction.ArticleFormState();
 
                 return executeOptions;
             },

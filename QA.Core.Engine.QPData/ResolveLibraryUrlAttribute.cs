@@ -21,7 +21,7 @@ namespace QA.Core.Engine
         {
             get { return _propertyName; }
         }
-        
+
         /// <summary>
         /// Тип
         /// </summary>
@@ -49,7 +49,7 @@ namespace QA.Core.Engine
             _propertyName = propertyName;
         }
 
-        string ILoaderOption.Process(Quantumart.QPublishing.Database.DBConnector cnn, QPContext ctx, string value)
+        string ILoaderOption.Process(IDBConnector cnn, QPContext ctx, string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
@@ -57,7 +57,10 @@ namespace QA.Core.Engine
                 {
                     lock (_sync)
                     {
-                        _baseUrl = cnn.GetUrlForFileAttribute(FieldId, true, ctx.ShouldRemoveSchema);
+                        if (_baseUrl == null)
+                        {
+                            _baseUrl = cnn.GetUrlForFileAttribute(FieldId, true, ctx.ShouldRemoveSchema);
+                        }
                     }
                 }
 

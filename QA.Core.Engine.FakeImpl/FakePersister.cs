@@ -22,6 +22,13 @@ namespace QA.Core.Engine.Data
             return item;
         }
 
+        public AbstractItem[] Get<T>() where T: AbstractItem
+        {
+            var items = Repository.GetByType<T>();
+
+            return items;
+        }
+
         public T Get<T>(int id) where T : AbstractItem
         {
             return (T)Repository.Get(id);

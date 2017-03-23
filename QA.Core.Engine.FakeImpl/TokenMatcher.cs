@@ -47,6 +47,9 @@ namespace QA.Core.Engine.FakeImpl
             IEnumerable<string> cultureTokens,
             bool sanitize = true)
         {
+            if (originalUrl == null)
+                throw new ArgumentNullException("originalUrl");
+
             Url pUrl = originalUrl;
 
             var pSegments = pUrl.GetSegments();
@@ -57,6 +60,9 @@ namespace QA.Core.Engine.FakeImpl
             {
                 UrlMatchingResult regionResult = new UrlMatchingResult();
                 Url sanitized = pUrl;
+
+                if (sanitized == null)
+                    throw new InvalidProgramException("sanitized is null.");
 
                 if (domains == null && pattern.IsRegionInAuthority || pattern.IsCultureInAuthority)
                 {
@@ -81,6 +87,8 @@ namespace QA.Core.Engine.FakeImpl
                         if (r != null)
                         {
                             sanitized = sanitized.RemoveSegment(pattern.RegionTokenPosition);
+                            if (sanitized == null)
+                                throw new InvalidProgramException("RemoveSegment return null.");
                         }
                     }
                     if (!string.IsNullOrEmpty(r))
@@ -105,7 +113,10 @@ namespace QA.Core.Engine.FakeImpl
 
                         if (r != null)
                         {
+
                             sanitized = sanitized.RemoveSegment(pattern.CultureTokenPosition);
+                            if (sanitized == null)
+                                throw new InvalidProgramException("RemoveSegment return null.");
                         }
                         else if (pattern.IsRegionInAuthority ||
                             pattern.CultureTokenPosition > pattern.RegionTokenPosition)
@@ -129,7 +140,11 @@ namespace QA.Core.Engine.FakeImpl
 
                 if (regionResult.IsMatch)
                 {
+                    if (sanitized == null)
+                        throw new InvalidProgramException("sanitized is before return null.");
+
                     regionResult.SanitizedUrl = sanitized;
+
                     return regionResult;
                 }
             }
@@ -167,6 +182,7 @@ namespace QA.Core.Engine.FakeImpl
                 }
             }
 
+            // todo сделать выбор по критерию
             var pattern = _config
                 .MatchingPatterns
                 .FirstOrDefault(x => x.UseForReplacing);
@@ -190,14 +206,18 @@ namespace QA.Core.Engine.FakeImpl
         {
             Url url = original;
             List<string> domains = null;
-            List<string> segments = new List<string>();
+            List<string> segments = original.GetSegments().ToList();
+            if (culture == null)
+                culture = pattern.DefaultCultureToken ?? "";
+            bool isCultureDefault = culture.Equals(pattern.DefaultCultureToken, StringComparison.OrdinalIgnoreCase);
+            int culturePosition = -1;
 
             if (!string.IsNullOrEmpty(culture))
             {
                 if (pattern.ProcessCultureTokens)
                 {
-                    SetToken(original, pattern.CultureTokenPosition, pattern.IsCultureInAuthority, culture,
-                        ref url, ref domains, segments, culture.Equals(pattern.DefaultCultureToken, StringComparison.OrdinalIgnoreCase));
+                    culturePosition = SetToken(original, pattern.CultureTokenPosition, pattern.IsCultureInAuthority, culture,
+                         ref domains, segments);
                 }
             }
 
@@ -206,7 +226,7 @@ namespace QA.Core.Engine.FakeImpl
                 if (pattern.ProcessRegionTokens)
                 {
                     SetToken(original, pattern.RegionTokenPosition, pattern.IsRegionInAuthority, region,
-                        ref url, ref domains, segments);
+                        ref domains, segments);
                 }
             }
 
@@ -217,14 +237,19 @@ namespace QA.Core.Engine.FakeImpl
 
             if (segments.Count > 0)
             {
-                url = url.PrependSegment(string.Join("/", segments));
+                if (isCultureDefault && culturePosition >= 0)
+                {
+                    segments.RemoveAt(culturePosition);
+                }
+
+                url = url.SetPath("/" + string.Join("/", segments));
             }
 
             return url;
         }
 
-        private static void SetToken(Url original, int position, bool isInAuthority, string tokenValue,
-            ref Url url, ref List<string> domains, List<string> segments, bool isDefault = false)
+        private static int SetToken(Url original, int position, bool isInAuthority, string tokenValue,
+             ref List<string> domains, List<string> segments, bool isDefault = false)
         {
             if (isInAuthority)
             {
@@ -248,18 +273,19 @@ namespace QA.Core.Engine.FakeImpl
             }
             else
             {
-                if (isDefault)
-                    return;
-
-                else if (segments.Count > position)
+                if (segments.Count >= position)
                 {
                     segments.Insert(position, tokenValue);
+                    return position;
+
                 }
                 else
                 {
                     segments.Add(tokenValue);
+                    return 0;
                 }
             }
+            return -1;
         }
 
 
@@ -269,7 +295,7 @@ namespace QA.Core.Engine.FakeImpl
             {
                 result = MatchToken(segments[tokenPosition], values);
                 return result != null;
-                    
+
             }
             result = null;
             return true;

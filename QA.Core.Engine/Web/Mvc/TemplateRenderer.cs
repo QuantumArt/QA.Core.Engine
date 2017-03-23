@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
@@ -7,7 +10,28 @@ namespace QA.Core.Engine.Web.Mvc
 {
     public interface ITemplateRenderer
     {
+        /// <summary>
+        /// Рендерить виджет в текущий поток
+        /// </summary>
+        /// <param name="item">виджект</param>
+        /// <param name="helper"></param>
         void RenderTemplate(AbstractItem item, HtmlHelper helper);
+
+        /// <summary>
+        /// Рендерить виджет в указанный поток
+        /// </summary>
+        /// <param name="item">виджект</param>
+        /// <param name="helper"></param>
+        /// <param name="writer">поток, в который происходит рендеринг виджета</param>
+        void RenderTemplate(AbstractItem item, HtmlHelper helper, TextWriter writer);
+
+        /// <summary>
+        /// Получить контент виджета (аналогично RenderTemplate) без рендеринга в текущий поток
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="helper"></param>
+        /// <returns>контент виджета</returns>
+        IHtmlString GetTemplate(AbstractItem item, HtmlHelper helper);
     }
 
     public class TemplateRenderer : ITemplateRenderer
@@ -23,6 +47,27 @@ namespace QA.Core.Engine.Web.Mvc
 
         public void RenderTemplate(AbstractItem item, HtmlHelper helper)
         {
+            RenderTemplateInternal(item, helper, null);
+        }
+
+        public void RenderTemplate(AbstractItem item, HtmlHelper helper, TextWriter writer)
+        {
+            RenderTemplateInternal(item, helper, writer);
+        }
+
+        public IHtmlString GetTemplate(AbstractItem item, HtmlHelper helper)
+        {
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
+            {
+                RenderTemplateInternal(item, helper, writer);
+            }
+
+            return MvcHtmlString.Create(sb.ToString());
+        }
+
+        protected void RenderTemplateInternal(AbstractItem item, HtmlHelper helper, TextWriter writer)
+        {
             Type itemType = item.GetContentType();
             string controllerName = controllerMapper.GetControllerName(itemType);
             if (string.IsNullOrEmpty(controllerName))
@@ -35,7 +80,14 @@ namespace QA.Core.Engine.Web.Mvc
 
             try
             {
-                helper.RenderAction("Index", values);
+                if (writer == null)
+                {
+                    helper.RenderAction("Index", values);
+                }
+                else
+                {
+                    writer.Write(helper.Action("Index", values));
+                }
             }
             catch (Exception ex)
             {
@@ -55,7 +107,7 @@ namespace QA.Core.Engine.Web.Mvc
             values[ContentRoute.AbstractItemKey] = item; //item.Id;
 
             helper.ViewContext.HttpContext.Items["currentpartid"] = item.Id;
-
+            // не будем поддерживать Areas
             //var vpd = helper.RouteCollection.GetVirtualPath(helper.ViewContext.RequestContext, values);
             //if (vpd == null)
             //    throw new InvalidOperationException("Unable to render " + item + " (" + values.ToQueryString() + " did not match any route)");

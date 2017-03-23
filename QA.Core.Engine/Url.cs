@@ -415,6 +415,11 @@ namespace QA.Core.Engine
             return null;
         }
 
+        /// <summary>
+        /// Query
+        /// </summary>
+        /// <param name="queryKey"></param>
+        /// <returns></returns>
         public string this[string queryKey]
         {
             get { return GetQuery(queryKey); }

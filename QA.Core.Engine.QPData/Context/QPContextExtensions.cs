@@ -20,21 +20,175 @@ using Quantumart.QPublishing.Database;
 namespace QA.Core.Engine.QPData 
 {
 
-public interface IQPContent
-{
-	int Id { get; set; }
-	int StatusTypeId { get; set; }
-	StatusType StatusType { get; set; }
-	bool StatusTypeChanged { get; set; }
-	bool Visible { get; set; }
-	bool Archive { get; set; }
-	DateTime Created { get; set; }
-	DateTime Modified { get; set; }
-	int LastModifiedBy { get; set; }
-}
-
-internal static partial class LinqHelper
+	public interface IQPContent
 	{
+		int Id { get; set; }
+		int StatusTypeId { get; set; }
+		StatusType StatusType { get; set; }
+		bool StatusTypeChanged { get; set; }
+		bool Visible { get; set; }
+		bool Archive { get; set; }
+		DateTime Created { get; set; }
+		DateTime Modified { get; set; }
+		int LastModifiedBy { get; set; }
+	}
+
+	public interface IQPLink
+	{
+		int Id { get; }
+		int LinkedItemId { get; }
+		int LinkId { get; }
+		bool InsertWithArticle { get; set; }
+		bool RemoveWithArticle { get; set; }
+		void SaveInsertingInstruction();
+		void SaveRemovingInstruction();
+		string InsertingInstruction { get; }
+		string RemovingInstruction { get; }
+	}
+
+	public abstract class QPEntityBase
+	{
+		protected QPContext _InternalDataContext = LinqHelper.Context;
+
+		public QPContext InternalDataContext
+		{
+			get { return _InternalDataContext; }
+			set { _InternalDataContext = value; }
+		}
+
+		public abstract void Detach();
+
+		protected static EntityRef<T> Detach<T>(EntityRef<T> entity) where T : QPEntityBase
+		{
+			if (!entity.HasLoadedOrAssignedValue || entity.Entity == null)
+				return new EntityRef<T>();
+			entity.Entity.Detach();
+			return new EntityRef<T>(entity.Entity);
+		}
+
+		protected static EntitySet<T> Detach<T>(EntitySet<T> set, Action<T> onAdd, Action<T> onRemove) where T : QPEntityBase
+		{
+			if (set == null || !set.HasLoadedOrAssignedValues)
+				return new EntitySet<T>(onAdd, onRemove);
+
+			var list = set.ToList();
+			list.ForEach(t => t.Detach());
+
+			var newSet = new EntitySet<T>(onAdd, onRemove);
+			newSet.Assign(list);
+			return newSet;
+		}
+
+		protected static Link<T> Detach<T>(Link<T> value)
+		{
+			if (!value.HasLoadedOrAssignedValue)
+				return default(Link<T>);
+
+			return new Link<T>(value.Value);
+		}
+	}
+
+	public abstract class QPLinkBase : QPEntityBase
+	{
+
+		private bool _insertWithArticle = false;
+		public bool InsertWithArticle
+		{
+			get
+			{
+				return _insertWithArticle;
+			}
+			set
+			{
+				_insertWithArticle = value;
+			}
+		}
+
+		private bool _removeWithArticle = false;
+		public bool RemoveWithArticle
+		{
+			get
+			{
+				return _removeWithArticle;
+			}
+			set
+			{
+				_removeWithArticle = value;
+			}
+		}
+
+		private string _insertingInstruction;
+		public string InsertingInstruction
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(_insertingInstruction))
+					SaveInsertingInstruction();
+				return _insertingInstruction;
+			}
+		}
+
+
+		private string _removingInstruction;
+		public string RemovingInstruction
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(_removingInstruction))
+					SaveRemovingInstruction();
+				return _removingInstruction;
+			}
+		}
+
+		public void SaveRemovingInstruction()
+		{
+			_removingInstruction = String.Format("EXEC sp_executesql N'EXEC qp_delete_single_link @linkId, @itemId, @linkedItemId', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", this.LinkId, this.Id, this.LinkedItemId);
+		}
+
+		public void SaveInsertingInstruction()
+		{
+			_insertingInstruction = String.Format("EXEC sp_executesql N'EXEC qp_insert_single_link @linkId, @itemId, @linkedItemId', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", this.LinkId, this.Id, this.LinkedItemId);
+		}
+
+		public abstract int LinkId { get; }
+		public abstract int Id { get; }
+		public abstract int LinkedItemId { get; }
+
+
+	}
+
+	public abstract class QPContentBase : QPEntityBase
+	{
+		protected bool _StatusTypeChanged;
+		public bool StatusTypeChanged
+		{
+			get { return _StatusTypeChanged; }
+			set { _StatusTypeChanged = value; }
+		}
+
+		protected void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
+		{
+			if (a.PropertyName == "StatusType")
+			{
+				_StatusTypeChanged = true;
+			}
+		}
+	}
+
+	public partial class StatusType: QPEntityBase
+	{
+		public override void Detach()
+		{
+				if (null == PropertyChanging)
+					return;
+
+				PropertyChanging = null;
+				PropertyChanged = null;
+		}
+	}
+
+	internal static partial class LinqHelper
+{
 	
 	private static string _Key = Guid.NewGuid().ToString();
 	private static string Key
@@ -219,7 +373,8 @@ public partial class QPContext
 			{
 				_cnn = (Connection != null) ? new DBConnector(Connection, Transaction) : new DBConnector(ConnectionString);
 				
-				_cnn.UpdateManyToMany = false;
+				_cnn.UpdateManyToOne = false;
+				_cnn.ThrowNotificationExceptions = false;
 			}
 			return _cnn;
 		}
@@ -250,7 +405,7 @@ public partial class QPContext
 	{
 		get
 		{
-			return StageSiteUrl;
+			return (Cnn.IsStage) ? StageSiteUrl : LiveSiteUrl;
 		}
 	}
 	
@@ -306,7 +461,41 @@ public partial class QPContext
 		return result;
 	}
 			
+
+	public override void SubmitChanges(System.Data.Linq.ConflictMode failureMode)
+	{
+		Cnn.ExternalTransaction = Transaction;
+		ChangeSet delta = GetChangeSet();
+
+		foreach (var delete in delta.Deletes.OfType<IQPLink>().Where(n => !n.RemoveWithArticle))
+		{
+			delete.SaveRemovingInstruction();
+		}
+
+		foreach (var insert in delta.Inserts.OfType<IQPLink>().Where(n => !n.InsertWithArticle))
+		{
+			insert.SaveInsertingInstruction();
+		}
+
+
+
+		base.SubmitChanges(failureMode);
+
+		foreach (var delete in delta.Deletes.OfType<IQPLink>().Where(n => !n.RemoveWithArticle))
+		{
+			Cnn.ProcessData(delete.RemovingInstruction);
+		}
+
+		foreach (var insert in delta.Inserts.OfType<IQPLink>().Where(n => !n.InsertWithArticle))
+		{
+			Cnn.ProcessData(insert.InsertingInstruction);
+		}
 	
+
+
+
+	}
+
 }
 
 
@@ -812,27 +1001,59 @@ public class ListSelector<TSource, T> : IList<T>, IList
 	#endregion
 }
     
-	partial class QPAbstractItem : IQPContent
+	partial class QPAbstractItem : QPContentBase, IQPContent
 	{
 		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
 		public QPAbstractItem(QPContext context) 
 		{
 			_InternalDataContext = context;
 			OnCreated();
+		}
+		
+		public void LoadStatusType()
+		{
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
+		}
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._Parent1 = Detach(this._Parent1);
+
+			this._Discriminator1 = Detach(this._Discriminator1);
+
+			this._VersionOf1 = Detach(this._VersionOf1);
+
+			this._Culture1 = Detach(this._Culture1);
+
+			this._TitleFormat1 = Detach(this._TitleFormat1);
+
+			this._AbstractItemAbtractItemRegionArticles = Detach(this._AbstractItemAbtractItemRegionArticles, attach_AbstractItemAbtractItemRegionArticles, detach_AbstractItemAbtractItemRegionArticles);
+
+			this._Children = Detach(this._Children, attach_Children, detach_Children);
+
+			this._Versions = Detach(this._Versions, attach_Versions, detach_Versions);
+
+			this._ObsoleteUrls = Detach(this._ObsoleteUrls, attach_ObsoleteUrls, detach_ObsoleteUrls);
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
+		partial void OnCreated()
+		{
+			if (_InternalDataContext == null)
+				_InternalDataContext = LinqHelper.Context;
+			_Visible = true;
+			_Archive = false;
+			_StatusTypeId = _InternalDataContext.PublishedId;
+			_StatusTypeChanged = false;
+			PropertyChanged += HandlePropertyChangedEvent;
 		}
 		
 		partial void OnLoaded()
@@ -847,30 +1068,8 @@ public class ListSelector<TSource, T> : IList<T>, IList
             _Keywords = InternalDataContext.ReplacePlaceholders(_Keywords);
             _MetaDescription = InternalDataContext.ReplacePlaceholders(_MetaDescription);
             _Tags = InternalDataContext.ReplacePlaceholders(_Tags);
-		}
-        
-		partial void OnCreated()
-		{
-			if (_InternalDataContext == null)
-				_InternalDataContext = LinqHelper.Context;
-			_Visible = true;
-			_Archive = false;
-			_StatusTypeId = _InternalDataContext.PublishedId;
-			_StatusTypeChanged = false;
-			PropertyChanged += HandlePropertyChangedEvent;
-		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
-		
-		public void LoadStatusType()
-		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
+            _AuthenticationTargeting = InternalDataContext.ReplacePlaceholders(_AuthenticationTargeting);
+            _Targeting = InternalDataContext.ReplacePlaceholders(_Targeting);
 		}
 
 	 
@@ -925,39 +1124,40 @@ public class ListSelector<TSource, T> : IList<T>, IList
 	}
 
 
-	partial class QPDiscriminator : IQPContent
+	partial class QPDiscriminator : QPContentBase, IQPContent
 	{
 		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
 		public QPDiscriminator(QPContext context) 
 		{
 			_InternalDataContext = context;
 			OnCreated();
 		}
 		
-		partial void OnLoaded()
+		public void LoadStatusType()
 		{
-
-            _Title = InternalDataContext.ReplacePlaceholders(_Title);
-            _Name = InternalDataContext.ReplacePlaceholders(_Name);
-            _CategoryName = InternalDataContext.ReplacePlaceholders(_CategoryName);
-            _Description = InternalDataContext.ReplacePlaceholders(_Description);
-            _AllowedZones = InternalDataContext.ReplacePlaceholders(_AllowedZones);
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
 		}
-        
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._AllowedItemDefinitions = Detach(this._AllowedItemDefinitions, attach_AllowedItemDefinitions, detach_AllowedItemDefinitions);
+
+			this._ItemDefinitionItemDefinitionArticles = Detach(this._ItemDefinitionItemDefinitionArticles, attach_ItemDefinitionItemDefinitionArticles, detach_ItemDefinitionItemDefinitionArticles);
+
+			this._Items = Detach(this._Items, attach_Items, detach_Items);
+
+			this._AllowDefinition = Detach(this._AllowDefinition, attach_AllowDefinition, detach_AllowDefinition);
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
 		partial void OnCreated()
 		{
 			if (_InternalDataContext == null)
@@ -968,18 +1168,15 @@ public class ListSelector<TSource, T> : IList<T>, IList
 			_StatusTypeChanged = false;
 			PropertyChanged += HandlePropertyChangedEvent;
 		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
 		
-		public void LoadStatusType()
+		partial void OnLoaded()
 		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
+
+            _Title = InternalDataContext.ReplacePlaceholders(_Title);
+            _Name = InternalDataContext.ReplacePlaceholders(_Name);
+            _CategoryName = InternalDataContext.ReplacePlaceholders(_CategoryName);
+            _Description = InternalDataContext.ReplacePlaceholders(_Description);
+            _AllowedZones = InternalDataContext.ReplacePlaceholders(_AllowedZones);
 		}
 
 	
@@ -1042,36 +1239,34 @@ public class ListSelector<TSource, T> : IList<T>, IList
 	}
 
 
-	partial class QPCulture : IQPContent
+	partial class QPCulture : QPContentBase, IQPContent
 	{
 		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
 		public QPCulture(QPContext context) 
 		{
 			_InternalDataContext = context;
 			OnCreated();
 		}
 		
-		partial void OnLoaded()
+		public void LoadStatusType()
 		{
-
-            _Title = InternalDataContext.ReplacePlaceholders(_Title);
-            _Name = InternalDataContext.ReplacePlaceholders(_Name);
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
 		}
-        
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._AbstractItems = Detach(this._AbstractItems, attach_AbstractItems, detach_AbstractItems);
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
 		partial void OnCreated()
 		{
 			if (_InternalDataContext == null)
@@ -1082,18 +1277,12 @@ public class ListSelector<TSource, T> : IList<T>, IList
 			_StatusTypeChanged = false;
 			PropertyChanged += HandlePropertyChangedEvent;
 		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
 		
-		public void LoadStatusType()
+		partial void OnLoaded()
 		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
+
+            _Title = InternalDataContext.ReplacePlaceholders(_Title);
+            _Name = InternalDataContext.ReplacePlaceholders(_Name);
 		}
 
 	
@@ -1132,27 +1321,43 @@ public class ListSelector<TSource, T> : IList<T>, IList
 	}
 
 
-	partial class ItemTitleFormat : IQPContent
+	partial class ItemTitleFormat : QPContentBase, IQPContent
 	{
 		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
 		public ItemTitleFormat(QPContext context) 
 		{
 			_InternalDataContext = context;
 			OnCreated();
+		}
+		
+		public void LoadStatusType()
+		{
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
+		}
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._Item = Detach(this._Item, attach_Item, detach_Item);
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
+		partial void OnCreated()
+		{
+			if (_InternalDataContext == null)
+				_InternalDataContext = LinqHelper.Context;
+			_Visible = true;
+			_Archive = false;
+			_StatusTypeId = _InternalDataContext.PublishedId;
+			_StatusTypeChanged = false;
+			PropertyChanged += HandlePropertyChangedEvent;
 		}
 		
 		partial void OnLoaded()
@@ -1161,7 +1366,37 @@ public class ListSelector<TSource, T> : IList<T>, IList
             _Value = InternalDataContext.ReplacePlaceholders(_Value);
             _Description = InternalDataContext.ReplacePlaceholders(_Description);
 		}
-        
+
+	
+	}
+
+
+	partial class QPRegion : QPContentBase, IQPContent
+	{
+		
+		public QPRegion(QPContext context) 
+		{
+			_InternalDataContext = context;
+			OnCreated();
+		}
+		
+		public void LoadStatusType()
+		{
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
+		}
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
 		partial void OnCreated()
 		{
 			if (_InternalDataContext == null)
@@ -1171,46 +1406,6 @@ public class ListSelector<TSource, T> : IList<T>, IList
 			_StatusTypeId = _InternalDataContext.PublishedId;
 			_StatusTypeChanged = false;
 			PropertyChanged += HandlePropertyChangedEvent;
-		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
-		
-		public void LoadStatusType()
-		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
-		}
-
-	
-	}
-
-
-	partial class QPRegion : IQPContent
-	{
-		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
-		public QPRegion(QPContext context) 
-		{
-			_InternalDataContext = context;
-			OnCreated();
 		}
 		
 		partial void OnLoaded()
@@ -1218,30 +1413,6 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
             _Title = InternalDataContext.ReplacePlaceholders(_Title);
             _Alias = InternalDataContext.ReplacePlaceholders(_Alias);
-		}
-        
-		partial void OnCreated()
-		{
-			if (_InternalDataContext == null)
-				_InternalDataContext = LinqHelper.Context;
-			_Visible = true;
-			_Archive = false;
-			_StatusTypeId = _InternalDataContext.PublishedId;
-			_StatusTypeChanged = false;
-			PropertyChanged += HandlePropertyChangedEvent;
-		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
-		
-		public void LoadStatusType()
-		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
 		}
 
 	 
@@ -1256,27 +1427,41 @@ public class ListSelector<TSource, T> : IList<T>, IList
 	}
 
 
-	partial class TrailedAbstractItem : IQPContent
+	partial class TrailedAbstractItem : QPContentBase, IQPContent
 	{
 		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
 		public TrailedAbstractItem(QPContext context) 
 		{
 			_InternalDataContext = context;
 			OnCreated();
+		}
+		
+		public void LoadStatusType()
+		{
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
+		}
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
+		partial void OnCreated()
+		{
+			if (_InternalDataContext == null)
+				_InternalDataContext = LinqHelper.Context;
+			_Visible = true;
+			_Archive = false;
+			_StatusTypeId = _InternalDataContext.PublishedId;
+			_StatusTypeChanged = false;
+			PropertyChanged += HandlePropertyChangedEvent;
 		}
 		
 		partial void OnLoaded()
@@ -1286,7 +1471,39 @@ public class ListSelector<TSource, T> : IList<T>, IList
             _Title = InternalDataContext.ReplacePlaceholders(_Title);
             _Name = InternalDataContext.ReplacePlaceholders(_Name);
 		}
-        
+
+	
+	}
+
+
+	partial class QPObsoleteUrl : QPContentBase, IQPContent
+	{
+		
+		public QPObsoleteUrl(QPContext context) 
+		{
+			_InternalDataContext = context;
+			OnCreated();
+		}
+		
+		public void LoadStatusType()
+		{
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
+		}
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._AbstractItem1 = Detach(this._AbstractItem1);
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
 		partial void OnCreated()
 		{
 			if (_InternalDataContext == null)
@@ -1296,46 +1513,6 @@ public class ListSelector<TSource, T> : IList<T>, IList
 			_StatusTypeId = _InternalDataContext.PublishedId;
 			_StatusTypeChanged = false;
 			PropertyChanged += HandlePropertyChangedEvent;
-		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
-		
-		public void LoadStatusType()
-		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
-		}
-
-	
-	}
-
-
-	partial class QPObsoleteUrl : IQPContent
-	{
-		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
-		public QPObsoleteUrl(QPContext context) 
-		{
-			_InternalDataContext = context;
-			OnCreated();
 		}
 		
 		partial void OnLoaded()
@@ -1343,64 +1520,41 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
             _Url = InternalDataContext.ReplacePlaceholders(_Url);
 		}
-        
-		partial void OnCreated()
-		{
-			if (_InternalDataContext == null)
-				_InternalDataContext = LinqHelper.Context;
-			_Visible = true;
-			_Archive = false;
-			_StatusTypeId = _InternalDataContext.PublishedId;
-			_StatusTypeChanged = false;
-			PropertyChanged += HandlePropertyChangedEvent;
-		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
-		
-		public void LoadStatusType()
-		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
-		}
 
 	
 	}
 
 
-	partial class QPItemDefinitionConstraint : IQPContent
+	partial class QPItemDefinitionConstraint : QPContentBase, IQPContent
 	{
 		
-		bool _StatusTypeChanged;
-		public bool StatusTypeChanged
-		{
-			get { return _StatusTypeChanged; }
-			set { _StatusTypeChanged = value; }
-		}
-		
-		QPContext _InternalDataContext;
-		public QPContext InternalDataContext
-		{
-			get { return _InternalDataContext; }
-			set { _InternalDataContext = value; }
-		}
-        
 		public QPItemDefinitionConstraint(QPContext context) 
 		{
 			_InternalDataContext = context;
 			OnCreated();
 		}
 		
-		partial void OnLoaded()
+		public void LoadStatusType()
 		{
-
-            _Title = InternalDataContext.ReplacePlaceholders(_Title);
+			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);
 		}
-        
+
+		public override void Detach()
+		{
+			if (null == PropertyChanging)
+				return;
+
+			PropertyChanging = null;
+			PropertyChanged = null;
+
+
+			this._Source1 = Detach(this._Source1);
+
+			this._Target1 = Detach(this._Target1);
+
+			this._StatusType = Detach(this._StatusType);
+		}
+
 		partial void OnCreated()
 		{
 			if (_InternalDataContext == null)
@@ -1411,18 +1565,11 @@ public class ListSelector<TSource, T> : IList<T>, IList
 			_StatusTypeChanged = false;
 			PropertyChanged += HandlePropertyChangedEvent;
 		}
-
-		void HandlePropertyChangedEvent(object sender, PropertyChangedEventArgs a)
-		{
-			if (a.PropertyName == "StatusType")
-			{
-				_StatusTypeChanged = true;
-			}
-		}
 		
-		public void LoadStatusType()
+		partial void OnLoaded()
 		{
-			_StatusType.Entity = InternalDataContext.StatusTypes.Single(n => n.Id == _StatusTypeId);		
+
+            _Title = InternalDataContext.ReplacePlaceholders(_Title);
 		}
 
 	

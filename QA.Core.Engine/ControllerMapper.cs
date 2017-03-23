@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
+using System.Web.Mvc.Async;
 using QA.Core.Engine.UI;
 
 namespace QA.Core.Engine
@@ -29,18 +30,35 @@ namespace QA.Core.Engine
 
                     var methods = new ReflectedControllerDescriptor(controllerDefinition.AdapterType)
                         .GetCanonicalActions()
-                        .Select(m => m.ActionName).ToArray();
+                        .Select(m => ExtractActionName(m)).SelectMany(x => x)
+                        .Distinct()
+                        .ToArray();
 
                     var actionResolver = new ActionResolver(this, methods);
 
                     _controllerActionMap[controllerDefinition.ControllerName] = methods;
-                    
+
                     // если включен LowercaseRoute
                     _controllerActionMap[controllerDefinition.ControllerName.ToLower()] = methods;
 
                     PathDictionary.PrependFinder(id.ItemType, actionResolver);
                 }
             }
+        }
+
+        private static IEnumerable<string> ExtractActionName(ActionDescriptor m)
+        {
+            var nameAttr = m.GetCustomAttributes(typeof(ActionNameAttribute), true)
+                .Cast<ActionNameAttribute>()
+                .FirstOrDefault();
+
+            if (nameAttr != null)
+            {
+                yield return nameAttr.Name;
+                yield return nameAttr.Name.ToLower();
+            }
+
+            yield return m.ActionName;
         }
 
         public string GetControllerName(Type type)
@@ -104,7 +122,7 @@ namespace QA.Core.Engine
             return controllerDefinitions;
         }
     }
-  
+
     [DebuggerDisplay("ControlsAttribute: {AdapterType}->{ItemType}")]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true)]
     public class ControlsAttribute : Attribute, IComparable<ControlsAttribute>, IAdapterDescriptor
@@ -117,20 +135,20 @@ namespace QA.Core.Engine
             this.itemType = itemType;
         }
 
-       
+
         public Type ItemType
         {
             get { return itemType; }
         }
 
-        
+
         public Type AdapterType
         {
             get { return adapterType; }
             set { adapterType = value; }
         }
 
-      
+
         public string ControllerName
         {
             get
@@ -145,7 +163,7 @@ namespace QA.Core.Engine
             }
         }
 
-             public bool IsAdapterFor(PathData path, Type requiredType)
+        public bool IsAdapterFor(PathData path, Type requiredType)
         {
             if (path.IsEmpty())
                 return false;

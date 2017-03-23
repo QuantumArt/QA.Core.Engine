@@ -39,6 +39,21 @@ namespace QA.Core.Engine.QPData
             }
         }
 
+        /// <summary>
+        /// Добавлять в коллекцию Details поля из таблицы AbstractItem
+        /// </summary>
+        static bool IncludeBaseFieldsIntoDetails
+        {
+            get
+            {
+                bool value = false;
+
+                bool.TryParse(ConfigurationManager.AppSettings["IncludeBaseFieldsIntoDetails"] ?? "", out value);
+
+                return value;
+            }
+        }
+
         public AbstractItemLoader(AbstractItemActivator activator, IEngine engine, IDefinitionManager manager)
         {
             _activator = activator;
@@ -62,15 +77,16 @@ namespace QA.Core.Engine.QPData
                 _engine.Resolve<ILogger>().ErrorException("Resolving type in AbstractItemLoader is failed. ", ex);
             }
 
-            var items = Model.ItemsInternal;
             var locker = Model.Locker;
 
             var newItems = new Dictionary<int, AbstractItem>();
             var groupedIds = new Dictionary<int, Dictionary<int, object>>();
 
             // process loading into newItems
+            Stopwatch sw = new Stopwatch();
 
-            // TODO: use unitOfWorks
+            sw.Start();
+
             #region loading
             var ctx = LinqHelper.Context;
 
@@ -89,6 +105,8 @@ namespace QA.Core.Engine.QPData
                            t.IndexOrder,
                            t.ExtensionId,
                            t.IsInSiteMap,
+                           t.AuthenticationTargeting,
+                           Targeting = t.Targeting,
                            StatusTypeName = t.StatusType.Name,
                            t.ZoneName,
                            t.Tags,
@@ -100,21 +118,36 @@ namespace QA.Core.Engine.QPData
                            t.Description,
                            t.Keywords,
                            t.AllowedUrlPatterns,
-                           t.DeniedUrlPatterns,
-                           Regions = t.AbstractItemAbtractItemRegionArticles.Select(x =>
-                               new Region { Id = x.QPRegion_ID, Title = x.QPRegion.Title, Alias = x.QPRegion.Alias })
-                       })
-                          .ToDictionary(k => k, v => v)
-                          .GroupBy(x => x.Value.Discriminator_ID));
+                           t.DeniedUrlPatterns
+                       }).ToArray()
+                          .GroupBy(x => x.Discriminator_ID));
+
+            var timer_aiLoaded = sw.ElapsedMilliseconds;
+
+            var regionMapping = ReadWithNoLock(
+                () => ctx.AbstractItemAbtractItemRegionArticles
+                    //.Where(x => x.QPRegion.Visible)
+                    // не нужно, так как отсутствующие связи не загружаются.
+                        .Select(x => new { x.QPAbstractItem_ID, x.QPRegion_ID })
+                        .ToLookup(x => x.QPAbstractItem_ID, x => x.QPRegion_ID)
+                    );
+
+            var timer_rmLoaded = sw.ElapsedMilliseconds;
+
+            var allRegions = ReadWithNoLock(
+                () => ctx.QPRegions
+                        .Select(x => new Region { Id = x.Id, Alias = x.Alias, Title = x.Title })
+                        .ToLookup(x => x.Id, x => x)
+                        );
+
+            var timer_arLoaded = sw.ElapsedMilliseconds;
             #endregion
 
             // get discriminators
             // TODO: use services
             var discriminators = ctx.QPDiscriminators.Select(x => x)
+                .ToArray()
                 .ToDictionary(k => k.Id, v => v);
-            // get regions
-            // var regions = ctx.QPRegions.Select(x => new { x.Id, x.Alias })
-            //    .ToDictionary(k => k.Id, v => v);
 
 #if DEBUG
             var list = string.Join("\n", discriminators.Values.Select(x => x.Name + " " + x.IsPage));
@@ -129,27 +162,24 @@ namespace QA.Core.Engine.QPData
                     continue;
                 }
 
-                var groupedItems = new Dictionary<int, object>();
                 QPDiscriminator discriminator = null;
 
                 if (discriminators.TryGetValue(group.Key.Value, out discriminator))
                 {
                     // processing extensions
-                    var contentId = discriminator.PreferredContentId;
-                    if (contentId != null)
+                    var contentId = discriminator.PreferredContentId ?? 0;
+                    if (!groupedIds.ContainsKey(contentId))
                     {
-                        if (!groupedIds.ContainsKey(contentId.Value))
-                        {
-                            groupedIds.Add(contentId.Value, groupedItems);
-                        }
+                        groupedIds.Add(contentId, new Dictionary<int, object>());
                     }
+                    var groupedItems = groupedIds[contentId];
 
                     foreach (var item in group)
                     {
-                        if ((item.Value.ExtensionId ?? 0) != (contentId ?? 0))
+                        if ((item.ExtensionId ?? 0) != contentId)
                         {
                             Debug.WriteLine(string.Format("Несоответствие расширения и расширения в PreferredContentId: {0}, {1} for {2} ({3})",
-                                item.Value.ExtensionId, contentId, item.Value.Id, item.Value.Name));
+                                item.ExtensionId, contentId, item.Id, item.Name));
                         }
 
 
@@ -164,40 +194,53 @@ namespace QA.Core.Engine.QPData
                         ((IInjectable<ICultureUrlResolver>)newItem).Set(cultureUrlresolver);
 
                         // TODO: mapping
-                        newItem.Regions = new RegionCollection();
-                        newItem.Regions.AddRange(item.Value.Regions);
-                        if (item.Value.Culture != null)
-                            newItem.Culture = new Culture { Id = item.Value.Culture.Id, Key = item.Value.Culture.Name, Name = item.Value.Culture.Name, Title = item.Value.Culture.Title };
 
-                        newItem.Id = item.Value.Id;
-                        newItem.Name = item.Value.Name;
-                        newItem.Description = item.Value.Description;
-                        newItem.Keywords = item.Value.Keywords;
-                        newItem.Tags = item.Value.Tags;
-                        newItem.ParentId = item.Value.Parent_ID ?? 0;
-                        newItem.Title = item.Value.Title;
-                        newItem.Name = item.Value.Name;
-                        newItem.MetaDescription = item.Value.MetaDescription;
-                        newItem.VersionOfId = item.Value.VersionOf_ID;
-                        newItem.ExtensionId = item.Value.ExtensionId;
-                        newItem.TitleFormat = item.Value.TitleFormatId ?? 0;
-                        newItem.ZoneName = item.Value.ZoneName;
-                        newItem.IsVisible = item.Value.IsVisible ?? false;
-                        newItem.IsInSitemap = item.Value.IsInSiteMap ?? false;
-                        newItem.SortOrder = item.Value.IndexOrder ?? 0;
-                        newItem.IsPublished = item.Value.StatusTypeName.Equals("published", StringComparison.InvariantCultureIgnoreCase);
+                        newItem.Regions = new RegionCollection(regionMapping[item.Id]
+                            .Select(x => allRegions[x].FirstOrDefault())
+                            .Where(x => x != null));
+
+                        if (item.Culture != null)
+                            newItem.Culture = new Culture { Id = item.Culture.Id, Key = item.Culture.Name, Name = item.Culture.Name, Title = item.Culture.Title };
+
+                        newItem.Id = item.Id;
+                        newItem.Name = item.Name;
+                        newItem.Description = item.Description;
+                        newItem.Keywords = item.Keywords;
+                        newItem.Tags = item.Tags;
+                        newItem.ParentId = item.Parent_ID ?? 0;
+                        newItem.Title = item.Title;
+                        newItem.Name = item.Name;
+                        newItem.MetaDescription = item.MetaDescription;
+                        newItem.VersionOfId = item.VersionOf_ID;
+                        newItem.ExtensionId = item.ExtensionId;
+                        newItem.TitleFormat = item.TitleFormatId ?? 0;
+                        newItem.ZoneName = item.ZoneName;
+                        newItem.IsVisible = item.IsVisible ?? false;
+                        newItem.IsInSitemap = item.IsInSiteMap ?? false;
+                        newItem.SortOrder = item.IndexOrder ?? 0;
+                        newItem.IsPublished = item.StatusTypeName.Equals("published", StringComparison.InvariantCultureIgnoreCase);
                         newItems.Add(newItem.Id, newItem);
-                        newItem.Created = item.Value.Created;
-                        newItem.Updated = item.Value.Modified;
+                        newItem.Created = item.Created;
+                        newItem.Updated = item.Modified;
 
-                        if (!string.IsNullOrWhiteSpace(item.Value.AllowedUrlPatterns))
+                        if (!string.IsNullOrEmpty(item.AuthenticationTargeting))
                         {
-                            newItem.AllowedUrls = item.Value.AllowedUrlPatterns.SplitString('\n', '\r', ';', ' ', ',');
+                            newItem.Access = string.Equals(item.AuthenticationTargeting, "Authencticated", StringComparison.InvariantCultureIgnoreCase)
+                                ? AuthorizationTargeting.AuthorizedOnly :
+                                    (string.Equals(item.AuthenticationTargeting, "NonAuthenticated", StringComparison.InvariantCultureIgnoreCase)
+                                        ? AuthorizationTargeting.AnonymousOnly : AuthorizationTargeting.All);
                         }
 
-                        if (!string.IsNullOrWhiteSpace(item.Value.DeniedUrlPatterns))
+                        newItem.Targeting = item.Targeting;
+
+                        if (!string.IsNullOrWhiteSpace(item.AllowedUrlPatterns))
                         {
-                            newItem.DeniedUrls = item.Value.DeniedUrlPatterns.SplitString('\n', '\r', ';', ' ', ',');
+                            newItem.AllowedUrls = item.AllowedUrlPatterns.SplitString('\n', '\r', ';', ' ', ',');
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(item.DeniedUrlPatterns))
+                        {
+                            newItem.DeniedUrls = item.DeniedUrlPatterns.SplitString('\n', '\r', ';', ' ', ',');
                         }
 
                         groupedItems.Add(newItem.Id, null);
@@ -209,22 +252,28 @@ namespace QA.Core.Engine.QPData
             // Ключом служит идентификатор расширения, а не AbstractItem
             var needLoadM2MItems = new Dictionary<int, AbstractItem>();
             // process nodes' extensions
+
+            int aiContentID = ctx.Cnn.GetContentIdByNetName(ctx.SiteId, typeof(QPAbstractItem).Name);
+
             foreach (var contentIdKey in groupedIds.Keys)
             {
-                if (contentIdKey <= 0 || groupedIds[contentIdKey].Keys.Count == 0)
+                if ((!IncludeBaseFieldsIntoDetails && contentIdKey <= 0) || groupedIds[contentIdKey].Keys.Count == 0)
                     continue;
 
-                var def = _manager.GetDefinitions()
-                    .FirstOrDefault(x => x.PreferredContentId == contentIdKey);
-                if (def == null)
+                ItemDefinition def = null;
+                if (contentIdKey > 0)
                 {
-                    Trace.WriteLine(String.Format("Для contentIdKey '{0}' отсутствует ItemDefinition", contentIdKey));
-                    continue;
+                    def = _manager.GetDefinitions()
+                        .FirstOrDefault(x => x.PreferredContentId == contentIdKey);
+                    if (def == null)
+                    {
+                        Trace.WriteLine(String.Format("Для contentIdKey '{0}' отсутствует ItemDefinition", contentIdKey));
+                        continue;
+                    }
                 }
 
                 var results = new DataTable();
-                string conStr = LinqHelper.Context.ConnectionString;
-
+                string conStr = ctx.ConnectionString;
                 using (SqlConnection con = new SqlConnection(conStr))
                 {
                     con.Open();
@@ -242,6 +291,12 @@ namespace QA.Core.Engine.QPData
                     isLive.SqlDbType = SqlDbType.Bit;
                     contentId.SqlDbType = SqlDbType.Int;
                     tvpParam.SqlDbType = SqlDbType.Structured;
+
+                    SqlParameter includeBaseFieldsParam = sqlCmd.Parameters.AddWithValue("@includeBaseFields", IncludeBaseFieldsIntoDetails);
+                    includeBaseFieldsParam.SqlDbType = SqlDbType.Bit;
+
+                    SqlParameter aiContentId = sqlCmd.Parameters.AddWithValue("@baseContentId", aiContentID);
+                    aiContentId.SqlDbType = SqlDbType.Int;
 
                     using (var reader = sqlCmd.ExecuteReader())
                     {
@@ -280,7 +335,7 @@ namespace QA.Core.Engine.QPData
                                 {
                                     foreach (var option in optionsMap[column.ColumnName])
                                     {
-                                        stringValue = option.Process(ctx.Cnn, ctx, stringValue);
+                                        stringValue = option.Process(new DBConnectorWrapper(ctx.Cnn), ctx, stringValue);
                                     }
 
                                     value = stringValue;
@@ -298,7 +353,7 @@ namespace QA.Core.Engine.QPData
                         item.Details.Add(column.ColumnName, value is DBNull ? null : value);
 
                         if (value is decimal
-                            && def.NeedLoadM2MRelationsIds
+                            && def != null && def.NeedLoadM2MRelationsIds
                             && String.Compare(column.ColumnName, "CONTENT_ITEM_ID", true) == 0)
                         {
                             needLoadM2MItems.Add(item.GetDetail<int>("CONTENT_ITEM_ID", 0), item);
@@ -307,7 +362,26 @@ namespace QA.Core.Engine.QPData
                 }
             }
 
-            LoadM2MRelationsIds(needLoadM2MItems);
+            var timer_exLoaded = sw.ElapsedMilliseconds;
+
+            DoWithNoLock(() =>
+            {
+                LoadM2MRelationsIds(needLoadM2MItems);
+            });
+
+            var timer_m2mLoaded = sw.ElapsedMilliseconds;
+            sw.Stop();
+
+            ObjectFactoryBase.Resolve<ILogger>()
+                .LogInfo(() => "Structure loaded in " + new
+                {
+                    timer_aiLoaded,
+                    timer_rmLoaded,
+                    timer_arLoaded,
+                    timer_exLoaded,
+                    timer_m2mLoaded
+                });
+
             needLoadM2MItems = null;
 
             // process nodes' hierarchy
@@ -336,23 +410,17 @@ namespace QA.Core.Engine.QPData
                 }
             }
 
-            // process exchanging the data
-
             lock (locker)
             {
-                items.Clear();
-                foreach (var item in newItems)
-                {
-                    items.Add(item.Key, item.Value);
+                Model.Root = newItems.Values
+                    .FirstOrDefault(x => x.ParentId == null
+                        || x.ParentId == x.Id
+                        || x.ParentId == default(int));
 
-                    // set the root
-                    if (Model.Root == null && (item.Value.ParentId == null
-                        || item.Value.ParentId == item.Value.Id
-                        || item.Value.ParentId == 0))
-                    {
-                        Model.Root = item.Value;
-                    }
-                }
+                if (Model.Root == null)
+                    throw new InvalidOperationException("Обнаружены циклические ссылки в структуре сайта. Не найдена корневая страница.");
+
+                Model.SetItems(newItems);
             }
         }
 
@@ -369,15 +437,19 @@ namespace QA.Core.Engine.QPData
             tvpParam.SqlDbType = SqlDbType.Structured;
 
             var results = new DataTable();
-            using (SqlConnection con = new SqlConnection(LinqHelper.Context.ConnectionString))
+
+            DoWithNoLock(() =>
             {
-                cmd.Connection = con;
-                con.Open();
-                using (var reader = cmd.ExecuteReader())
+                using (SqlConnection con = new SqlConnection(LinqHelper.Context.ConnectionString))
                 {
-                    results.Load(reader);
+                    cmd.Connection = con;
+                    con.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        results.Load(reader);
+                    }
                 }
-            }
+            });
 
             foreach (DataRow result in results.Rows)
             {
@@ -413,10 +485,24 @@ namespace QA.Core.Engine.QPData
 
         protected virtual T ReadWithNoLock<T>(Func<T> func)
         {
-            using (var txn = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (GetTransaction())
             {
                 return func();
             }
         }
+
+
+        protected virtual void DoWithNoLock(Action action)
+        {
+            using (GetTransaction())
+            {
+                action();
+            }
+        }
+        private static TransactionScope GetTransaction()
+        {
+            return new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted });
+        }
+
     }
 }

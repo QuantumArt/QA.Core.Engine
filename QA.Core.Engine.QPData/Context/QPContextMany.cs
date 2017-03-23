@@ -23,40 +23,42 @@ public partial class QPAbstractItem
 		{
 			if (_Regions == null)
 			{
-				_Regions = this.AbstractItemAbtractItemRegionArticles.GetNewBindingList()
+				var result = this.AbstractItemAbtractItemRegionArticles.GetNewBindingList()
 				.AsListSelector<AbstractItemAbtractItemRegionArticle, QPRegion>
 				(
 					od => od.QPRegion,
 					delegate(IList<AbstractItemAbtractItemRegionArticle> ods, QPRegion p)
 					{
 						var items = ods.Where(od => od.QPRegion_ID == p.Id);
-						if (items.Count() == 0)
+						if (!items.Any())
 						{
 							this.Modified = System.DateTime.Now;
-							ods.Add(
-								new AbstractItemAbtractItemRegionArticle 
-								{
-									QPAbstractItem_ID = this.Id,
-									QPRegion = p
-								}
-							);
+							var item = new AbstractItemAbtractItemRegionArticle();
+							item.QPAbstractItem_ID = this.Id;
+							item.QPRegion = p;
+							item.InsertWithArticle = true;
+							ods.Add(item);
 						}
 					},
 					delegate(IList<AbstractItemAbtractItemRegionArticle> ods, QPRegion p)
 					{
 						var items = ods.Where(od => od.QPRegion_ID == p.Id);
-						if (items.Count() > 0)
+						if (items.Any())
 						{
 							this.Modified = System.DateTime.Now;
 							var item = items.Single();
-							item.InternalDataContext = InternalDataContext;
 							InternalDataContext.AbstractItemAbtractItemRegionArticles.DeleteOnSubmit(item);
-							item.SaveRemovingInstruction();
+							item.RemoveWithArticle = true;
 							ods.Remove(item);
 						}
 					}
 				);
+				if (this.PropertyChanging == null)
+					return result;
+				else
+					_Regions = result;
 			}
+
 			return _Regions;
 		}
 	}
@@ -91,40 +93,42 @@ public partial class QPDiscriminator
 		{
 			if (_AllowedItemDefinitions1 == null)
 			{
-				_AllowedItemDefinitions1 = this.ItemDefinitionItemDefinitionArticles.GetNewBindingList()
+				var result = this.ItemDefinitionItemDefinitionArticles.GetNewBindingList()
 				.AsListSelector<ItemDefinitionItemDefinitionArticle, QPDiscriminator>
 				(
 					od => od.QPDiscriminator2,
 					delegate(IList<ItemDefinitionItemDefinitionArticle> ods, QPDiscriminator p)
 					{
 						var items = ods.Where(od => od.QPDiscriminator_ID2 == p.Id);
-						if (items.Count() == 0)
+						if (!items.Any())
 						{
 							this.Modified = System.DateTime.Now;
-							ods.Add(
-								new ItemDefinitionItemDefinitionArticle 
-								{
-									QPDiscriminator_ID = this.Id,
-									QPDiscriminator2 = p
-								}
-							);
+							var item = new ItemDefinitionItemDefinitionArticle();
+							item.QPDiscriminator_ID = this.Id;
+							item.QPDiscriminator2 = p;
+							item.InsertWithArticle = true;
+							ods.Add(item);
 						}
 					},
 					delegate(IList<ItemDefinitionItemDefinitionArticle> ods, QPDiscriminator p)
 					{
 						var items = ods.Where(od => od.QPDiscriminator_ID2 == p.Id);
-						if (items.Count() > 0)
+						if (items.Any())
 						{
 							this.Modified = System.DateTime.Now;
 							var item = items.Single();
-							item.InternalDataContext = InternalDataContext;
 							InternalDataContext.ItemDefinitionItemDefinitionArticles.DeleteOnSubmit(item);
-							item.SaveRemovingInstruction();
+							item.RemoveWithArticle = true;
 							ods.Remove(item);
 						}
 					}
 				);
+				if (this.PropertyChanging == null)
+					return result;
+				else
+					_AllowedItemDefinitions1 = result;
 			}
+
 			return _AllowedItemDefinitions1;
 		}
 	}
@@ -148,17 +152,9 @@ public partial class QPDiscriminator
 }
 
 	
-public partial class AbstractItemAbtractItemRegionArticle
+public partial class AbstractItemAbtractItemRegionArticle : QPLinkBase, IQPLink
 {
-	private QPContext _InternalDataContext = LinqHelper.Context;
-	
-	public QPContext InternalDataContext
-	{
-		get { return _InternalDataContext; }
-		set { _InternalDataContext = value; }
-	}
-        
-	public decimal ITEM_ID
+	public override int Id
 	{
 		get
 		{
@@ -166,6 +162,25 @@ public partial class AbstractItemAbtractItemRegionArticle
 		}
 	}
 	
+	public override int LinkedItemId
+	{
+		get
+		{
+			return _LINKED_ITEM_ID;
+		}
+	}
+	
+
+	[Obsolete]
+	public decimal ITEM_ID
+	{
+		get
+		{
+			return _ITEM_ID;
+		}
+	}
+
+	[Obsolete]
 	public decimal LINKED_ITEM_ID
 	{
 		get
@@ -174,40 +189,39 @@ public partial class AbstractItemAbtractItemRegionArticle
 		}
 	}
 	
-	private string _removingInstruction;
-	public string RemovingInstruction
+	public override void Detach()
+	{
+		if (null == PropertyChanging)
+			return;
+
+		PropertyChanging = null;
+		PropertyChanged = null;
+
+		
+		this._QPAbstractItem1 = Detach(this._QPAbstractItem1);
+
+		this._QPRegion1 = Detach(this._QPRegion1);
+
+	}
+
+	public override int LinkId
 	{
 		get
 		{
-			if (String.IsNullOrEmpty(_removingInstruction))
-				SaveRemovingInstruction();
-			return _removingInstruction;
-		}
-	}
-	
-	public void SaveRemovingInstruction()
-	{
-		int linkId = InternalDataContext.Cnn.GetLinkIdByNetName(InternalDataContext.SiteId, "AbstractItemAbtractItemRegionArticle");
-		
-		if (linkId == 0)
-			throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "AbstractItemAbtractItemRegionArticle", InternalDataContext.SiteId));
+			int linkId = InternalDataContext.Cnn.GetLinkIdByNetName(InternalDataContext.SiteId, "AbstractItemAbtractItemRegionArticle");
+
+			if (linkId == 0)
+				throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "AbstractItemAbtractItemRegionArticle", InternalDataContext.SiteId));
 			
-		_removingInstruction = String.Format("EXEC sp_executesql N'delete from item_to_item where link_id = @linkId and ((l_item_id = @itemId  and r_item_id = @linkedItemId) or (l_item_id = @linkedItemId  and r_item_id = @itemId))', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", linkId, this.ITEM_ID, this.LINKED_ITEM_ID);
+			return linkId;
+		}
 	}
 }
 
 	
-public partial class ItemDefinitionItemDefinitionArticle
+public partial class ItemDefinitionItemDefinitionArticle : QPLinkBase, IQPLink
 {
-	private QPContext _InternalDataContext = LinqHelper.Context;
-	
-	public QPContext InternalDataContext
-	{
-		get { return _InternalDataContext; }
-		set { _InternalDataContext = value; }
-	}
-        
-	public decimal ITEM_ID
+	public override int Id
 	{
 		get
 		{
@@ -215,6 +229,25 @@ public partial class ItemDefinitionItemDefinitionArticle
 		}
 	}
 	
+	public override int LinkedItemId
+	{
+		get
+		{
+			return _LINKED_ITEM_ID;
+		}
+	}
+	
+
+	[Obsolete]
+	public decimal ITEM_ID
+	{
+		get
+		{
+			return _ITEM_ID;
+		}
+	}
+
+	[Obsolete]
 	public decimal LINKED_ITEM_ID
 	{
 		get
@@ -223,25 +256,32 @@ public partial class ItemDefinitionItemDefinitionArticle
 		}
 	}
 	
-	private string _removingInstruction;
-	public string RemovingInstruction
+	public override void Detach()
+	{
+		if (null == PropertyChanging)
+			return;
+
+		PropertyChanging = null;
+		PropertyChanged = null;
+
+		
+		this._QPDiscriminator1 = Detach(this._QPDiscriminator1);
+
+		this._QPDiscriminator12 = Detach(this._QPDiscriminator12);
+
+	}
+
+	public override int LinkId
 	{
 		get
 		{
-			if (String.IsNullOrEmpty(_removingInstruction))
-				SaveRemovingInstruction();
-			return _removingInstruction;
-		}
-	}
-	
-	public void SaveRemovingInstruction()
-	{
-		int linkId = InternalDataContext.Cnn.GetLinkIdByNetName(InternalDataContext.SiteId, "ItemDefinitionItemDefinitionArticle");
-		
-		if (linkId == 0)
-			throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "ItemDefinitionItemDefinitionArticle", InternalDataContext.SiteId));
+			int linkId = InternalDataContext.Cnn.GetLinkIdByNetName(InternalDataContext.SiteId, "ItemDefinitionItemDefinitionArticle");
+
+			if (linkId == 0)
+				throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "ItemDefinitionItemDefinitionArticle", InternalDataContext.SiteId));
 			
-		_removingInstruction = String.Format("EXEC sp_executesql N'delete from item_to_item where link_id = @linkId and ((l_item_id = @itemId  and r_item_id = @linkedItemId) or (l_item_id = @linkedItemId  and r_item_id = @itemId))', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", linkId, this.ITEM_ID, this.LINKED_ITEM_ID);
+			return linkId;
+		}
 	}
 }
 

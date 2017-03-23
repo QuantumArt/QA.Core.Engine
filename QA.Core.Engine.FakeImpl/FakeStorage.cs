@@ -10,11 +10,8 @@ namespace QA.Core.Engine.Data
     {
         Dictionary<int, AbstractItem> _dict = new Dictionary<int, AbstractItem>();
 
-        private INodeHierarchyProcessor _processor;
-
-        public FakeStorage(INodeHierarchyProcessor processor)
+        public FakeStorage()
         {
-            _processor = processor;
             SiteStructure.AttachTo(this);
         }
 
@@ -214,6 +211,20 @@ namespace QA.Core.Engine.Data
                     _dict.Add(item.Id, item);
                 }
             }
+        }
+
+
+        public AbstractItem[] GetByType<T>() where T : AbstractItem
+        {
+            if (!_dict.Values
+                .Any(a => a is T))
+            {
+                return null;
+            }
+
+            return _dict.Values
+                .Where(w => w is T)
+                .ToArray();
         }
     }
 }
