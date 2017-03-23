@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="" xmlns="http://schemas.microsoft.com/linqtosql/mapping/2007">
+  <Table Name="STATUS_TYPE" Member="StatusTypes">
+    <Type Name="QA.Core.Engine.QPData.StatusType">
+      <Column Name="SITE_ID" Member="SiteId" Storage="_SiteId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="STATUS_TYPE_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_NAME" Member="Name" Storage="_Name" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="WEIGHT" Member="Weight" Storage="_Weight" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="DESCRIPTION" Member="Description" Storage="_Description" DbType="NVarChar(512)" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_293_STAGE" Member="QPAbstractItems">
+    <Type Name="QA.Core.Engine.QPData.QPAbstractItem">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Title]" Member="Title" Storage="_Title" DbType="NVarChar(255)" />
+      <Column Name="[Name]" Member="Name" Storage="_Name" DbType="NVarChar(255)" />
+      <Column Name="[Parent]" Member="Parent_ID" Storage="_Parent" DbType="Decimal(18,0)" />
+      <Column Name="[IsVisible]" Member="IsVisible" Storage="_IsVisible" DbType="Decimal(18,0)" />
+      <Column Name="[IsPage]" Member="IsPage" Storage="_IsPage" DbType="Decimal(18,0)" />
+      <Column Name="[ZoneName]" Member="ZoneName" Storage="_ZoneName" DbType="NVarChar(255)" />
+      <Column Name="[AllowedUrlPatterns]" Member="AllowedUrlPatterns" Storage="_AllowedUrlPatterns" DbType="NText" UpdateCheck="Never" />
+      <Column Name="[DeniedUrlPatterns]" Member="DeniedUrlPatterns" Storage="_DeniedUrlPatterns" DbType="NText" UpdateCheck="Never" />
+      <Column Name="[Description]" Member="Description" Storage="_Description" DbType="NVarChar(500)" />
+      <Column Name="[Discriminator]" Member="Discriminator_ID" Storage="_Discriminator" DbType="Decimal(18,0)" />
+      <Column Name="[ContentId]" Member="ContentId" Storage="_ContentId" DbType="Decimal(38,0)" />
+      <Column Name="[VersionOf]" Member="VersionOf_ID" Storage="_VersionOf" DbType="Decimal(18,0)" />
+      <Column Name="[Culture]" Member="Culture_ID" Storage="_Culture" DbType="Decimal(18,0)" />
+      <Column Name="[TitleFormat]" Member="TitleFormat_ID" Storage="_TitleFormat" DbType="Decimal(18,0)" />
+      <Column Name="[Keywords]" Member="Keywords" Storage="_Keywords" DbType="NVarChar(512)" />
+      <Column Name="[MetaDescription]" Member="MetaDescription" Storage="_MetaDescription" DbType="NVarChar(512)" />
+      <Column Name="[Tags]" Member="Tags" Storage="_Tags" DbType="NText" UpdateCheck="Never" />
+      <Column Name="[IsInSiteMap]" Member="IsInSiteMap" Storage="_IsInSiteMap" DbType="Decimal(18,0)" />
+      <Column Name="[IndexOrder]" Member="IndexOrder" Storage="_IndexOrder" DbType="Decimal(38,0)" />
+      <Column Name="[ExtensionId]" Member="ExtensionId" Storage="_ExtensionId" DbType="Decimal(38,0)" />
+      <Association Name="Parent_QPAbstractItem" Member="Parent" Storage="_Parent1" ThisKey="Parent_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="Discriminator_QPAbstractItem" Member="Discriminator" Storage="_Discriminator1" ThisKey="Discriminator_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="VersionOf_QPAbstractItem" Member="VersionOf" Storage="_VersionOf1" ThisKey="VersionOf_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="Culture_QPAbstractItem" Member="Culture" Storage="_Culture1" ThisKey="Culture_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="TitleFormat_QPAbstractItem" Member="TitleFormat" Storage="_TitleFormat1" ThisKey="TitleFormat_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="QPAbstractItem_13" Member="AbstractItemAbtractItemRegionArticles" Storage="_AbstractItemAbtractItemRegionArticles" ThisKey="Id" OtherKey="QPAbstractItem_ID" />
+      <Association Name="Parent_QPAbstractItem" Member="Children" Storage="_Children" ThisKey="Id" OtherKey="Parent_ID" />
+      <Association Name="VersionOf_QPAbstractItem" Member="Versions" Storage="_Versions" ThisKey="Id" OtherKey="VersionOf_ID" />
+      <Association Name="AbstractItem_QPObsoleteUrl" Member="ObsoleteUrls" Storage="_ObsoleteUrls" ThisKey="Id" OtherKey="AbstractItem_ID" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_294_STAGE" Member="QPDiscriminators">
+    <Type Name="QA.Core.Engine.QPData.QPDiscriminator">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Title]" Member="Title" Storage="_Title" DbType="NVarChar(255)" />
+      <Column Name="[Name]" Member="Name" Storage="_Name" DbType="NVarChar(255)" />
+      <Column Name="[PreferredContentId]" Member="PreferredContentId" Storage="_PreferredContentId" DbType="Decimal(38,0)" />
+      <Column Name="[CategoryName]" Member="CategoryName" Storage="_CategoryName" DbType="NVarChar(255)" />
+      <Column Name="[Description]" Member="Description" Storage="_Description" DbType="NVarChar(512)" />
+      <Column Name="[IconUrl]" Member="IconUrl" Storage="_IconUrl" DbType="NVarChar(255)" />
+      <Column Name="[IsPage]" Member="IsPage" Storage="_IsPage" DbType="Decimal(18,0)" />
+      <Column Name="[AllowedZones]" Member="AllowedZones" Storage="_AllowedZones" DbType="NVarChar(255)" />
+      <Column Name="[FilterPartByUrl]" Member="FilterPartByUrl" Storage="_FilterPartByUrl" DbType="Decimal(18,0)" />
+      <Association Name="Source_QPItemDefinitionConstraint" Member="AllowedItemDefinitions" Storage="_AllowedItemDefinitions" ThisKey="Id" OtherKey="Source_ID" />
+      <Association Name="QPDiscriminator_42" Member="ItemDefinitionItemDefinitionArticles" Storage="_ItemDefinitionItemDefinitionArticles" ThisKey="Id" OtherKey="QPDiscriminator_ID" />
+      <Association Name="Discriminator_QPAbstractItem" Member="Items" Storage="_Items" ThisKey="Id" OtherKey="Discriminator_ID" />
+      <Association Name="Target_QPItemDefinitionConstraint" Member="AllowDefinition" Storage="_AllowDefinition" ThisKey="Id" OtherKey="Target_ID" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_295_STAGE" Member="QPCultures">
+    <Type Name="QA.Core.Engine.QPData.QPCulture">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Title]" Member="Title" Storage="_Title" DbType="NVarChar(255)" />
+      <Column Name="[Name]" Member="Name" Storage="_Name" DbType="NVarChar(255)" />
+      <Column Name="[Icon]" Member="Icon" Storage="_Icon" DbType="NVarChar(255)" />
+      <Association Name="Culture_QPAbstractItem" Member="AbstractItems" Storage="_AbstractItems" ThisKey="Id" OtherKey="Culture_ID" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_296_STAGE" Member="ItemTitleFormats">
+    <Type Name="QA.Core.Engine.QPData.ItemTitleFormat">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Value]" Member="Value" Storage="_Value" DbType="NVarChar(512)" />
+      <Column Name="[Description]" Member="Description" Storage="_Description" DbType="NText" UpdateCheck="Never" />
+      <Association Name="TitleFormat_QPAbstractItem" Member="Item" Storage="_Item" ThisKey="Id" OtherKey="TitleFormat_ID" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_300_STAGE" Member="QPRegions">
+    <Type Name="QA.Core.Engine.QPData.QPRegion">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Title]" Member="Title" Storage="_Title" DbType="NVarChar(255)" />
+      <Column Name="[ParentId]" Member="ParentId" Storage="_ParentId" DbType="Decimal(38,0)" />
+      <Column Name="[Alias]" Member="Alias" Storage="_Alias" DbType="NVarChar(255)" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_305_STAGE" Member="TrailedAbstractItems">
+    <Type Name="QA.Core.Engine.QPData.TrailedAbstractItem">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Trail]" Member="Trail" Storage="_Trail" DbType="NVarChar(255)" />
+      <Column Name="[Title]" Member="Title" Storage="_Title" DbType="NVarChar(255)" />
+      <Column Name="[Name]" Member="Name" Storage="_Name" DbType="NVarChar(255)" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_307_STAGE" Member="QPObsoleteUrls">
+    <Type Name="QA.Core.Engine.QPData.QPObsoleteUrl">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Ссылка]" Member="Url" Storage="_Url" DbType="NVarChar(2000)" />
+      <Column Name="[AbstractItem]" Member="AbstractItem_ID" Storage="_AbstractItem" DbType="Decimal(18,0)" />
+      <Association Name="AbstractItem_QPObsoleteUrl" Member="AbstractItem" Storage="_AbstractItem1" ThisKey="AbstractItem_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENT_359_STAGE" Member="QPItemDefinitionConstraints">
+    <Type Name="QA.Core.Engine.QPData.QPItemDefinitionConstraint">
+      <Column Name="CONTENT_ITEM_ID" Member="Id" Storage="_Id" DbType="Decimal(18,0) IDENTITY NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" AutoSync="OnInsert" />
+      <Column Name="STATUS_TYPE_ID" Member="StatusTypeId" Storage="_StatusTypeId" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="VISIBLE" Member="Visible" Storage="_Visible" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="ARCHIVE" Member="Archive" Storage="_Archive" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="CREATED" Member="Created" Storage="_Created" DbType="DateTime NOT NULL" />
+      <Column Name="MODIFIED" Member="Modified" Storage="_Modified" DbType="DateTime NOT NULL" />
+      <Column Name="LAST_MODIFIED_BY" Member="LastModifiedBy" Storage="_LastModifiedBy" DbType="Decimal(18,0) NOT NULL" />
+      <Column Name="[Source]" Member="Source_ID" Storage="_Source" DbType="Decimal(18,0)" />
+      <Column Name="[Target]" Member="Target_ID" Storage="_Target" DbType="Decimal(18,0)" />
+      <Column Name="[Title]" Member="Title" Storage="_Title" DbType="NVarChar(255)" />
+      <Association Name="Source_QPItemDefinitionConstraint" Member="Source" Storage="_Source1" ThisKey="Source_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="Target_QPItemDefinitionConstraint" Member="Target" Storage="_Target1" ThisKey="Target_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="StatusType_ContentItem" Member="StatusType" Storage="_StatusType" ThisKey="StatusTypeId" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LINK_13_UNITED" Member="AbstractItemAbtractItemRegionArticles">
+    <Type Name="QA.Core.Engine.QPData.AbstractItemAbtractItemRegionArticle">
+      <Column Name="ITEM_ID" Member="QPAbstractItem_ID" Storage="_ITEM_ID" DbType="Decimal(18,0) NOT NULL" IsPrimaryKey="true" />
+      <Column Name="LINKED_ITEM_ID" Member="QPRegion_ID" Storage="_LINKED_ITEM_ID" DbType="Decimal(18,0) NOT NULL" IsPrimaryKey="true" />
+      <Association Name="QPAbstractItem_13" Member="QPAbstractItem" Storage="_QPAbstractItem1" ThisKey="QPAbstractItem_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="QPRegion_13" Member="QPRegion" Storage="_QPRegion1" ThisKey="QPRegion_ID" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LINK_42_UNITED" Member="ItemDefinitionItemDefinitionArticles">
+    <Type Name="QA.Core.Engine.QPData.ItemDefinitionItemDefinitionArticle">
+      <Column Name="ITEM_ID" Member="QPDiscriminator_ID" Storage="_ITEM_ID" DbType="Decimal(18,0) NOT NULL" IsPrimaryKey="true" />
+      <Column Name="LINKED_ITEM_ID" Member="QPDiscriminator_ID2" Storage="_LINKED_ITEM_ID" DbType="Decimal(18,0) NOT NULL" IsPrimaryKey="true" />
+      <Association Name="QPDiscriminator_42" Member="QPDiscriminator" Storage="_QPDiscriminator1" ThisKey="QPDiscriminator_ID" OtherKey="Id" IsForeignKey="true" />
+      <Association Name="QPDiscriminator_42" Member="QPDiscriminator2" Storage="_QPDiscriminator12" ThisKey="QPDiscriminator_ID2" OtherKey="Id" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.qp_abs_time" Method="AbsTime" IsComposable="true">
+    <Parameter Name="time" Parameter="time" DbType="DateTime" />
+    <Return DbType="Decimal" />
+  </Function>
+</Database>

@@ -1,0 +1,296 @@
+﻿/**********************************************************************************/
+/*** Control panel                                                              ***/
+/**********************************************************************************/
+
+.control-panel
+{
+    font-family: Cambria;
+    position: fixed;
+    top: 0px !important;
+    left: 0px !important;
+    z-index: 1200 !important;
+    background: #fafafa;
+    width: 252px;
+    color: #403C37;
+    font-weight: 400;
+    font-style: normal;
+    text-transform: none;
+    border: 1px solid #c0c0c0;
+    padding: 10px;
+}
+
+    .control-panel .container
+    {
+        padding-top: 3px;
+        padding-bottom: 2px;
+    }
+
+    .control-panel .container
+    {
+        padding-top: 3px;
+        padding-bottom: 2px;
+    }
+
+    .control-panel .definition-title
+    {
+        padding: 1px 1px 0 18px;
+        white-space: nowrap;
+    }
+
+    .control-panel .definitions
+    {
+        padding-top: 3px;
+        margin-left: 1px;
+    }
+
+    .control-panel .group
+    {
+        padding: 5px 0px 0px 5px;
+    }
+
+    .control-panel .controls-bottom
+    {
+        margin-top: 6px;
+    }
+
+    .control-panel .group.collapsed .definitions
+    {
+        display: none;
+    }
+
+    .control-panel .group .expander
+    {
+    }
+
+    .control-panel .group.collapsed .expander-header
+    {
+    }
+
+    .control-panel .group .expander-header
+    {
+        border-bottom: dashed;
+        border-bottom-color: #403C37;
+        line-height: 1em;
+        border-width: 1px;
+        cursor: pointer;
+    }
+
+    .control-panel .group.collapsed .expander-header
+    {
+        border-bottom-color: #969696;
+        color: #969696;
+    }
+
+    .control-panel .group .expander-icon
+    {
+    }
+
+    .control-panel .group.collapsed .expander
+    {
+    }
+
+
+.control-panel-controls
+{
+}
+
+    .control-panel-controls div:first-child
+    {
+        /* padding-bottom: 5px;*/
+    }
+
+.definition-header
+{
+}
+
+.definition-draggable
+{
+    width: 230px;
+    cursor: move;
+    padding: 2px;
+    margin: 2px;
+    border: 1px solid #c0c0c0;
+    background-color: #fefefe;
+}
+
+    .definition-draggable.definition-item-dragged
+    {
+        background-color: #eeeefe;
+    }
+
+.titleBar
+{
+    cursor: move;
+    background-color: #ffeaea;
+    z-index: 10;
+    padding: 2px 0;
+}
+
+    .titleBar span, .control-panel-controls span
+    {
+        display: inline-block;
+    }
+
+    .titleBar .title
+    {
+        padding: 1px 1px 0 18px;
+    }
+
+
+.dropZone
+{
+    background-color: #ffffcf;
+    border: 1px solid #c0c0c0;
+}
+
+.zoneItem
+{
+    margin: 5px 5px 0px 5px;
+    border: 1px solid #c0c0c0;
+    background-color: #ffffff;
+}
+
+.zone-allowed
+{
+    background-color: #feffce;
+}
+
+.zone-hover
+{
+    background-color: rgb(123, 123, 255);
+}
+
+.zone-item-dragged
+{
+    max-width: 300px;
+}
+
+.item-definition.description
+{
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.popup-info
+{
+    position: fixed;
+    right: 10px;
+    color: black;
+    z-index: 10;
+}
+
+.widget-element
+{
+}
+
+.dragged-helper
+{
+    width: 240px;
+}
+
+    .dragged-helper .icon
+    {
+        width: 240px;
+    }
+
+/*-------------------------------------------------
+ 
+ */
+
+.zone-item-wrapper
+{
+    padding: 0;
+    margin: 0;
+}
+
+/*.zone-item-wrapper*/ .helper-allowed
+{
+    background-color: #ceffd4;
+}
+
+/*.zone-item-wrapper*/ .helper-allowed /*> .zone-item-helper*/
+{
+    padding: 5px 0px 5px 0px;
+}
+
+.zone-item-wrapper > .zone-item-helper
+{
+}
+
+.zone-item-wrapper.helper-hover > .zone-item-helper
+{
+    border-width: 1px;
+    padding: 10px 0px 10px 0px;
+    background-color: rgb(255, 251, 152);
+    border-color: darkgray;
+    border-style: dashed;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.helper-hover
+{
+    border-color: red;
+    background-color: #f3f340;
+}
+
+.zone-allowed .zone-item-wrapper
+{
+}
+
+    .zone-allowed .zone-item-wrapper .zone-item-helper
+    {
+    }
+
+.titleBar > .new
+{
+    padding: 1px 1px 0 18px;
+    position: absolute;
+    margin-left: 0px;
+    left: 7px;
+    top: -3px;
+}
+
+.titleBar .info
+{
+    position: absolute;
+    right: 1px;
+    top: 2px;
+    display: inline-block;
+}
+
+.titleBar .info-header
+{
+
+}
+
+.titleBar > .info > .control-tip
+{
+    border: 1px solid gray;
+    padding: 2px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background-color: #faffea;
+    display: inline-block;
+    width: auto;
+    position: absolute;
+    line-height: 15px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    top: -21px;
+    left: -10000px;
+    z-index: 1500;
+}
+
+.titleBar > .info:hover > .control-tip
+{
+    left: 0px !important;
+}
+
+.titleBar > .info:hover
+{
+    background-color: #fffafa;
+}

@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "EditNode";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model QA.Core.Engine.Editing.Models.NodeEditingModel
+<h2>
+    Редактирование @Model.Title</h2>
+<p>
+    Поля, помеченные * обязательны для заполнения.</p>
+<fieldset>
+    <legend>@Model.Title</legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        
+        @Html.Raw(Model.Control.ToString())
+        @Html.HiddenFor(x => x.ZoneName)
+        @Html.HiddenFor(x => x.ParentId)
+        @Html.HiddenFor(x => x.TypeName)
+        @Html.HiddenFor(x => x.ReturnUrl)
+        <div class="field-definition">
+            <div class="label-field">
+                Статус
+            </div>
+            @if (!Model.IsPublished)
+            {
+                <span class="new">Есть неопубликованные изменения</span>
+            }
+            else
+            {
+                <span class="">Опубликовано</span>
+            }
+        </div>
+        <div class="field-definition">
+            <div class="label-field">
+                Опубликовать
+            </div>
+            @Html.CheckBoxFor(x => x.ForcePublish)
+        </div>
+        <input type="submit" title="submit" value="Сохранить" />
+    }
+</fieldset>

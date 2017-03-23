@@ -1,0 +1,59 @@
+﻿.contentEditorWrapper
+{
+    position: relative;
+}
+
+    .contentEditorWrapper .editor-action
+    {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .contentEditorWrapper > .contentEditorControls
+    {
+        border: 1px solid gray;
+        padding: 2px;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        background-color: #faffea;
+        display: inline-block;
+        width: auto;
+        position: absolute;
+        line-height: 15px;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        top: -21px;
+        left: -10000px;
+    }
+
+    .contentEditorWrapper .contentEditorWrapper-title
+    {
+        font-weight: bold;
+    }
+
+    .contentEditorWrapper > .contentEditorWrapper-body
+    {
+        border: 1px dashed black;
+        padding: 2px;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+    }
+
+    .contentEditorWrapper:hover
+    {
+    }
+
+        .contentEditorWrapper:hover > .contentEditorControls
+        {
+            left: 0px !important;
+        }
+
+        .contentEditorWrapper:hover > .contentEditorWrapper-body
+        {
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }

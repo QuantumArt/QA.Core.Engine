@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6D8FF175-1F85-4907-A0F3-C8D07CCDC98D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QA.Core.Engine</RootNamespace>
+    <AssemblyName>QA.Core.Engine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\QA.Core.Engine.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\QA.Core.Engine.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=1.1.0.188, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.1.1.0.118\lib\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.4.0.0.0\lib\Net40\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog.Extended, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.Extended.2.1.0.1\lib\net45-full\NLog.Extended.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QA.Core, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QA.Core.3.0.3.0\lib\net45\QA.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QA.Core.Data, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QA.Core.Data.3.0.2.0\lib\net45\QA.Core.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QA.Core.Service.Interaction, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QA.Core.Service.Interaction.3.0.2.0\lib\net45\QA.Core.Service.Interaction.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QA.Core.Web, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QA.Core.Web.3.0.3.0\lib\net45\QA.Core.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Quantumart, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quantumart.2.0.2.0\lib\net45\Quantumart.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Quantumart.QP8.Assembling, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quantumart.2.0.2.0\lib\net45\Quantumart.QP8.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionResolver.cs" />
+    <Compile Include="Collections\ContentList.cs" />
+    <Compile Include="Collections\DetailCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\IContentItemList.cs" />
+    <Compile Include="Collections\IContentList.cs" />
+    <Compile Include="Collections\INameable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\INamedList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\IPageableList.cs" />
+    <Compile Include="Collections\IPlaceable.cs" />
+    <Compile Include="Collections\IQueryableList.cs" />
+    <Compile Include="Collections\ItemCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\ItemFilters.cs" />
+    <Compile Include="Collections\ItemList.cs" />
+    <Compile Include="Collections\IZonedList.cs" />
+    <Compile Include="AbstractItem.cs" />
+    <Compile Include="AbstractItemActivator.cs" />
+    <Compile Include="ContentRoute.cs" />
+    <Compile Include="ContentRouteData.cs" />
+    <Compile Include="ContentRouteOfT.cs" />
+    <Compile Include="ControllerMapper.cs" />
+    <Compile Include="Culture.cs" />
+    <Compile Include="DiscriminatorDTO.cs" />
+    <Compile Include="Editing\Controllers\FieldToSetModel.cs" />
+    <Compile Include="Editing\FieldConstants.cs" />
+    <Compile Include="Editing\IAbstractItemFieldNameResolver.cs" />
+    <Compile Include="Filters\UrlPartFilter.cs" />
+    <Compile Include="Interface\ICultureUrlResolver.cs" />
+    <Compile Include="Interface\IEngine.cs" />
+    <Compile Include="Interface\IInjectable.cs" />
+    <Compile Include="Interface\ILink.cs" />
+    <Compile Include="Interface\INode.cs" />
+    <Compile Include="Interface\IPathFinder.cs" />
+    <Compile Include="Interface\IPersister.cs" />
+    <Compile Include="Interface\IProvider.cs" />
+    <Compile Include="Interface\IEngineRepository.cs" />
+    <Compile Include="Interface\IRouteWithArea.cs" />
+    <Compile Include="Interface\ITransaction.cs" />
+    <Compile Include="Interface\IUniqueInZone.cs" />
+    <Compile Include="Interface\IUrlFilterable.cs" />
+    <Compile Include="Interface\IUrlParser.cs" />
+    <Compile Include="Details\AbstractEditableAttribute.cs" />
+    <Compile Include="Details\EditableCheckBoxAttribute.cs" />
+    <Compile Include="Details\EditableDateAttribute.cs" />
+    <Compile Include="Details\EditableHtmlTextAreaAttribute.cs" />
+    <Compile Include="Details\EditableTextAreaAttribute.cs" />
+    <Compile Include="Details\EditableTextAttribute.cs" />
+    <Compile Include="Details\EditableTextBoxAttribute.cs" />
+    <Compile Include="Details\EditorBuilder.cs" />
+    <Compile Include="Details\IDetailEditor.cs" />
+    <Compile Include="Details\IOrdered.cs" />
+    <Compile Include="Details\ITitled.cs" />
+    <Compile Include="Editing\ContentAttribute.cs" />
+    <Compile Include="Editing\Controllers\WidgetManagmentContoller.cs" />
+    <Compile Include="Editing\Models\NodeEditingModel.cs" />
+    <Compile Include="Editing\RouteTableExtensions.cs" />
+    <Compile Include="Extensions\Html\ControlPanelResourcePath.cs" />
+    <Compile Include="IControllerMapper.cs" />
+    <Compile Include="INodeHierarchyProcessor.cs" />
+    <Compile Include="IStartPageProvider.cs" />
+    <Compile Include="ItemExtensions.cs" />
+    <Compile Include="ItemState.cs" />
+    <Compile Include="Editing\Models\MoveNodeModel.cs" />
+    <Compile Include="ItemTitleFormat.cs" />
+    <Compile Include="LowercaseRoute.cs" />
+    <Compile Include="PathData.cs" />
+    <Compile Include="PathDictionary.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Region.cs" />
+    <Compile Include="RegionCollection.cs" />
+    <Compile Include="Security\ISecurityChecker.cs" />
+    <Compile Include="Singleton.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="UI\AllowedChildren.cs" />
+    <Compile Include="UI\AllowedParents.cs" />
+    <Compile Include="UI\AllowedZones.cs" />
+    <Compile Include="Extensions\Html\ControlPanelHelper.cs" />
+    <Compile Include="UI\DisallowedChildren.cs" />
+    <Compile Include="UI\Definition.cs" />
+    <Compile Include="UI\DefinitionsHelper.cs" />
+    <Compile Include="UI\IDefinitionManager.cs" />
+    <Compile Include="UI\IEditUrlManager.cs" />
+    <Compile Include="UI\ItemDefinition.cs" />
+    <Compile Include="Extensions\Html\MenuHtmlExtensions.cs" />
+    <Compile Include="Extensions\Html\MenuHtmlHelper.cs" />
+    <Compile Include="UI\PageDefinition.cs" />
+    <Compile Include="UI\Pages\IDefinitionModifier.cs" />
+    <Compile Include="UI\Pages\IFakePage.cs" />
+    <Compile Include="UI\Pages\IPage.cs" />
+    <Compile Include="UI\Pages\IRootPage.cs" />
+    <Compile Include="UI\Pages\IStartPage.cs" />
+    <Compile Include="UI\Pages\IStructuralPage.cs" />
+    <Compile Include="UI\Pages\IWebPart.cs" />
+    <Compile Include="UI\PartDefinition.cs" />
+    <Compile Include="UI\PartUtilities.cs" />
+    <Compile Include="Extensions\Html\WidgetZoneHelper.cs" />
+    <Compile Include="Extensions\Html\ZoneExtensions.cs" />
+    <Compile Include="Extensions\Html\ZoneHelper.cs" />
+    <Compile Include="Extensions\Html\ZoneRestrictionType.cs" />
+    <Compile Include="Extensions\Html\ZoneState.cs" />
+    <Compile Include="Url.cs" />
+    <Compile Include="VersioningFilter.cs" />
+    <Compile Include="Web\EmbeddedResourceBundle.cs" />
+    <Compile Include="Web\WebExtensions.cs" />
+    <Compile Include="Web\ItemEventArgs.cs" />
+    <Compile Include="Web\Mvc\ContentController.cs" />
+    <Compile Include="Web\Mvc\PermitionsAttribute.cs" />
+    <Compile Include="Web\Mvc\RequestContextExtensions.cs" />
+    <Compile Include="Web\Mvc\RouteCollectionExtensions.cs" />
+    <Compile Include="Web\Mvc\RouteExtensions.cs" />
+    <Compile Include="Web\Mvc\TemplateRenderer.cs" />
+    <Compile Include="Web\Mvc\ViewPageResult.cs" />
+    <Compile Include="Web\PageNotFoundEventArgs.cs" />
+    <Compile Include="Web\TagWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QA.Core.Web\QA.Core.Web.csproj">
+      <Project>{d11650b3-2082-48b1-986b-605a033a04dc}</Project>
+      <Name>QA.Core.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Editing\Views\Shared\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\ControlPanel.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editing\Views\WidgetManagment\EditNode.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editing\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editing\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\ControlPanel.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\WidgetElement.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\QA.Widget.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\QP.Utils.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\QP8BackendApi.Interaction.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\EditorWrapper.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\QA.Engine.Editing.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\Html\Resources\_references.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
