@@ -47,11 +47,11 @@ namespace QA.Core.Engine.Tests
 
 		private static void LoadAll(AbstractItemModel<int, AbstractItem> model)
 		{
-			var tf = new FakeTypeFinder();
-			var loader = new AbstractItemLoader(
-				new AbstractItemActivator(tf, new CombinedDefinitionManager(tf, new NullLogger())), null, new CombinedDefinitionManager(tf, new NullLogger()));
+            var tf = new TypeFinder();
+            var loader = new AbstractItemLoader(
+                new AbstractItemActivator(tf, new CombinedDefinitionManager(tf, new NullLogger())), null, new CombinedDefinitionManager(tf, new NullLogger()));
 
-			loader.LoadAll(model);
-		}
+            loader.LoadAll(model);
+        }
 	}
 }

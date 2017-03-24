@@ -6,7 +6,9 @@ using QA.Core.Engine.UI;
 
 namespace QA.Core.Engine.Data
 {
-    public class FakeEditUrlManager : IEditUrlManager
+    [Obsolete("Use EditUrlManager instead.")]
+    public class FakeEditUrlManager : EditUrlManager { }
+    public class EditUrlManager : IEditUrlManager
     {
         public string GetEditExistingItemUrl(AbstractItem item)
         {

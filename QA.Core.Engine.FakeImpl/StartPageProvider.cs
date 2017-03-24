@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using QA.Core.Engine.FakeImpl;
 using QA.Core.Engine.Web;
 using QA.Core.Web;
 
@@ -83,6 +84,8 @@ namespace QA.Core.Engine.Data
 
         private Dictionary<string, int> GetMappings(AbstractItem root)
         {
+            Throws.IfArgumentNull(root, _ => root);
+
             if (_matcher.Value == null)
             {
                 _defaultStartPageId.Value = ((IRootPage)root).DefaultStartPageId;
@@ -123,21 +126,18 @@ namespace QA.Core.Engine.Data
 
         public AbstractItem GetRootPage()
         {
-            return _engine.Persister.Get(GetRootPageId());
+            var id = GetRootPageId();
+            var rootPage = _engine.Persister.Get(id);
+            if (rootPage == null)
+            {
+                throw new InvalidOperationException(string.Format("Root page with id {0} has not been loaded. Check database.", id));
+            }
+            return rootPage;
         }
 
         public int GetRootPageId()
         {
-            if (_rootPageId.Value != default(int))
-                return _rootPageId.Value;
-
-            // берем id из конфига
-            // или находим в базе страницу с Id=ParentId
-            // или с ParentId=null
-
-            // TODO
-            _rootPageId.Value = 55071;
-            return 55071;
+            return QPSettings.RootPageId;
         }
 
 

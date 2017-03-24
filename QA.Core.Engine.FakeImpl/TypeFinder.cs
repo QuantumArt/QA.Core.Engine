@@ -9,10 +9,13 @@ using System.IO;
 
 namespace QA.Core.Engine.Data
 {
+    [Obsolete("Use TypeFinder instead.")]
+    public class FakeTypeFinder : TypeFinder { }
+
     /// <summary>
     /// AppDomain Type Finder
     /// </summary>
-    public class FakeTypeFinder : ITypeFinder
+    public class TypeFinder : ITypeFinder
     {
         #region Private Fields
 
@@ -22,6 +25,7 @@ namespace QA.Core.Engine.Data
 
         private string assemblyRestrictToLoadingPattern = ".*";
         private IList<string> assemblyNames = new List<string>();
+        private Dictionary<Type, object> _stubInstances = new Dictionary<Type, object>();
 
         #endregion
 
@@ -168,6 +172,17 @@ namespace QA.Core.Engine.Data
                     Trace.TraceError(ex.ToString());
                 }
             }
+        }
+
+        public ITypeFinder RegisterAssemblyWithType(Type typeExportedByAsseblyToRegister)
+        {
+            lock (_stubInstances)
+            {
+               _stubInstances[typeExportedByAsseblyToRegister] =
+                    Activator.CreateInstance(typeExportedByAsseblyToRegister);
+            }
+
+            return this;
         }
     }
 }

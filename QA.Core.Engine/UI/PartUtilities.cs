@@ -62,11 +62,11 @@ namespace QA.Core.Engine.UI
            
             WriteTitle(writer, definition, item);
 
-            WriteCommand(writer, "ред.", "command edit widget-edit-command",
+            WriteCommand(writer, "edit", "command edit widget-edit-command",
                 // Url.Parse(managementUrls.GetEditExistingItemUrl(item)).AppendQuery("returnUrl", returnUrl).Encode(),
                 item.Id,
                 "edit");
-            WriteCommand(writer, "удалить", "command delete",
+            WriteCommand(writer, "remove", "command delete",
                 // Url.Parse(managementUrls.GetDeleteUrl(item)).AppendQuery("returnUrl", returnUrl).Encode(),
                 item.Id,
                 "delete");
@@ -82,11 +82,11 @@ namespace QA.Core.Engine.UI
                 {
                     if (currentPage != item.ClosestPage())
                     {
-                        writer.Write("Унаследован");
+                        writer.Write("Inherited");
                     }
                     else
                     {
-                        writer.Write("Принадлежит данной странице");
+                        writer.Write("Belongs to this page");
                     }
                 }
                 using (TagWrapper.Begin("div", writer, new { @class = "info-header" }))
@@ -106,13 +106,13 @@ namespace QA.Core.Engine.UI
         public void WriteControlPanel(TextWriter writer, AbstractItem item, string currentUrl)
         {
             writer.Write("<div>");
-            WriteCommand(writer, "ред. страницу", "command edit page-edit-command",
+            WriteCommand(writer, "edit page", "command edit page-edit-command",
                 item.Id, "edit");
             
 
             // удаляем ключи авторизации custom action QP8
             //backend_sid=59cbd0da-dd58-4314-919d-6860d7f3a064&amp;site_id=35&amp;customerCode=qp_beeline_main_dev&amp;hostUID
-            WriteCommand(writer, "ред. виджеты", "command organize",
+            WriteCommand(writer, "organize widgets", "command organize",
                 Url.Parse(currentUrl ?? item.Url)
                 .RemoveQuery("backend_sid")
                 .RemoveQuery("hostUID")

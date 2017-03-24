@@ -65,7 +65,7 @@ namespace QA.Core.Engine.Tests.Integration
 
         private static void LoadAll(AbstractItemModel<int, AbstractItem> model)
         {
-            var tf = new FakeTypeFinder();
+            var tf = new TypeFinder();
             var loader = new AbstractItemLoader(
 				new AbstractItemActivator(tf, new LocalDefinitionManager(tf, null)), null, new LocalDefinitionManager(tf, null));
 

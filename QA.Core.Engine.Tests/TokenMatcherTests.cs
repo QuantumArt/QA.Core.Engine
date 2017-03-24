@@ -189,6 +189,7 @@ namespace QA.Core.Engine.Tests
         }
 
         [TestMethod]
+        [TestCategory("Issues")]
         public void Test_RegionMatcher_replace_segments()
         {
             lock (Locker.ForType<Url>())

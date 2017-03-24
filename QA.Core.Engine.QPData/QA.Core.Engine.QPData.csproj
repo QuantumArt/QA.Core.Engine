@@ -135,6 +135,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -146,12 +147,16 @@
     <Compile Include="AbstractItemLoader.cs" />
     <Compile Include="AbstractItemModel.cs" />
     <Compile Include="CombinedDefinitionManager.cs" />
+    <Compile Include="Configurator.cs" />
     <Compile Include="ILoaderOption.cs" />
     <Compile Include="ReplacePlaceholdersAttribute.cs" />
     <Compile Include="QPStorage.cs" />
     <Compile Include="Repository\AbstractItemRepository.cs" />
     <Compile Include="ResolveLibraryUrlAttribute.cs" />
     <Compile Include="SiteMapItemType.cs" />
+    <Compile Include="TrackableQPStorage.cs" />
+    <Compile Include="TrackableQPStorage2.cs" />
+    <Content Include="qa_extend_items.sql" />
     <Content Include="readme.txt" />
     <Compile Include="Context\QPContext.cs" />
     <Compile Include="Context\QPContextExtensions.cs" />
@@ -163,6 +168,7 @@
     <Compile Include="Context\QPContext.IUnitOfWork.cs" />
     <Compile Include="Context\LinqHelper.Extensions.cs" />
     <None Include="App.config" />
+    <None Include="Mapping\QPContext.map" />
     <None Include="Mapping\QPContext_United_Live.map">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -176,10 +182,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="QA.Core.Engine.QPData.nuspec" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Collections\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\QA.Core.Engine.FakeImpl\QA.Core.Engine.FakeImpl.csproj">
       <Project>{ace2403c-55ca-442c-8445-8c673433e3f1}</Project>

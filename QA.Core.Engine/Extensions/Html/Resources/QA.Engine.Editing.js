@@ -100,10 +100,6 @@ QA.Engine.Editing = function () {
 
 
     var editQPArticle = function (id, contentId, returnUrl, isPage) {
-        console.log('edit');
-        console.log(id);
-        console.log(contentId);
-        console.log(returnUrl);
         showQPForm(id, contentId, function () {
             try {
                 QA.Engine.Notification.articleEdited(id, contentId);
@@ -114,10 +110,6 @@ QA.Engine.Editing = function () {
 
 
     var showQPArticle = function (id, contentId, returnUrl, isPage) {
-        console.log('show');
-        console.log(id);
-        console.log(contentId);
-        console.log(returnUrl);
         showQPForm(id, contentId, function () {
             try {
                 QA.Engine.Notification.articleEdited(id, contentId);
@@ -127,9 +119,6 @@ QA.Engine.Editing = function () {
     };
 
     var createPartArticle = function (fieldsToSet, fieldsToBlock, contentId, returnUrl) {
-        console.log('show');
-        console.log(contentId);
-        console.log(returnUrl);
         showQPForm(0, contentId, function () {
             try {
                 QA.Engine.Notification.articleEdited(0, contentId);
@@ -139,12 +128,6 @@ QA.Engine.Editing = function () {
     };
 
     var deleteQPArticle = function (id, contentId, subItemsString, returnUrl) {
-        debugger;
-        console.log('delete');
-        console.log(id);
-        console.log(contentId);
-        console.log(returnUrl);
-
         var ids = [];
         if (subItemsString) {
             ids = subItemsString.split(',');

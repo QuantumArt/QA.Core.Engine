@@ -116,7 +116,7 @@ namespace QA.Core.Engine.Tests
         public void Test_GetDefinitions_Number_Of_Items_Is_Correct()
         {
 
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToArray();//.ToDictionary(d => d.Discriminator);
 
             Assert.IsNotNull(defs);
@@ -148,7 +148,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_Parts_Added_To_All_Types()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
             foreach (var def in defs.Values)
             {
@@ -159,7 +159,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_OnlyOnStructuralPage_Constraint()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["OnlyOnStructuralPagePart"];
@@ -175,7 +175,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_OnlyOnPartPart_Constraint()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["OnlyOnPartPart"];
@@ -191,7 +191,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_AllowedChildred_Page_Restrictions()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["RootPage"];
@@ -203,7 +203,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_Page_Restrictions_With_Inheritance()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["NewsItem"];
@@ -220,7 +220,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_Parent_Page_Restrictions_With_Inheritance()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["NewsContainer"];
@@ -231,7 +231,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_DisallowedChildren_Is_Not_Presented()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["NewsContainer"];
@@ -241,7 +241,7 @@ namespace QA.Core.Engine.Tests
         [TestMethod]
         public void Test_GetDefinitions_Check_Disallowed()
         {
-            var manager = new LocalDefinitionManager(new FakeTypeFinder(), null);
+            var manager = new LocalDefinitionManager(new TypeFinder(), null);
             var defs = manager.GetDefinitions().ToDictionary(d => d.Discriminator);
 
             var item = defs["BannerPart"];

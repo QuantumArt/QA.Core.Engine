@@ -178,6 +178,7 @@
     <Compile Include="Collections\IZonedList.cs" />
     <Compile Include="AbstractItem.cs" />
     <Compile Include="AbstractItemActivator.cs" />
+    <Compile Include="Configuration\Settings.cs" />
     <Compile Include="ContentRoute.cs" />
     <Compile Include="ContentRouteData.cs" />
     <Compile Include="ContentRouteOfT.cs" />
@@ -187,9 +188,13 @@
     <Compile Include="Editing\Controllers\FieldToSetModel.cs" />
     <Compile Include="Editing\FieldConstants.cs" />
     <Compile Include="Editing\IAbstractItemFieldNameResolver.cs" />
+    <Compile Include="EmptyCultureUrlResolver.cs" />
+    <Compile Include="Extensions\Html\ContentEditorWrapper.cs" />
     <Compile Include="Filters\UrlPartFilter.cs" />
     <Compile Include="Interface\ICultureUrlResolver.cs" />
+    <Compile Include="Interface\IDestroyable.cs" />
     <Compile Include="Interface\IEngine.cs" />
+    <Compile Include="Interface\IGreedyPage.cs" />
     <Compile Include="Interface\IInjectable.cs" />
     <Compile Include="Interface\ILink.cs" />
     <Compile Include="Interface\INode.cs" />
@@ -197,6 +202,7 @@
     <Compile Include="Interface\IPersister.cs" />
     <Compile Include="Interface\IProvider.cs" />
     <Compile Include="Interface\IEngineRepository.cs" />
+    <Compile Include="Interface\IRegionHierarchyProvider.cs" />
     <Compile Include="Interface\IRouteWithArea.cs" />
     <Compile Include="Interface\ITransaction.cs" />
     <Compile Include="Interface\IUniqueInZone.cs" />
@@ -264,6 +270,9 @@
     <Compile Include="Url.cs" />
     <Compile Include="VersioningFilter.cs" />
     <Compile Include="Web\EmbeddedResourceBundle.cs" />
+    <Compile Include="Web\Mvc\ContentControllerBase.cs" />
+    <Compile Include="Web\Mvc\CustomRouteTypeFinder.cs" />
+    <Compile Include="Web\Mvc\UrlExtensions.cs" />
     <Compile Include="Web\WebExtensions.cs" />
     <Compile Include="Web\ItemEventArgs.cs" />
     <Compile Include="Web\Mvc\ContentController.cs" />
@@ -310,11 +319,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Extensions\Html\Resources\QA.Widget.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Extensions\Html\Resources\QP.Utils.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -340,6 +344,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="QA.Core.Engine.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Extensions\Html\Resources\QA.Engine.ContentEditorWrapper.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

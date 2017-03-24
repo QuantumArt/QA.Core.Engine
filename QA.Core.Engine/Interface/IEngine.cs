@@ -1,4 +1,5 @@
-﻿using QA.Core.Engine.Web;
+﻿using System;
+using QA.Core.Engine.Web;
 
 namespace QA.Core.Engine
 {
@@ -6,6 +7,8 @@ namespace QA.Core.Engine
     {
         IUrlParser UrlParser { get; }
         IPersister Persister { get; }
+        IControllerMapper ControllerMapper { get; }
         T Resolve<T>();
+        IEngine RegisterAssemblyWithType(Type typeExportedByAsseblyToRegister);
     }
 }

@@ -48,6 +48,12 @@ namespace QA.Core.Engine.Extensions.Html
 
         /// <summary>
         /// Путь к ресурсу.
+        /// QA.Core.Engine.Extensions.Html.Resources.QA.Engine.ContentEditorWrapper.js
+        /// </summary>
+        public const string QAEngineContentEditorWrapper = @"QA.Core.Engine.Extensions.Html.Resources.QA.Engine.ContentEditorWrapper.js";
+
+        /// <summary>
+        /// Путь к ресурсу.
         /// QA.Core.Engine.Extensions.Html.Resources.QP8BackendApi.Interaction.js
         /// </summary>
         public const string QP8BackendApiInteractionJSPath = @"QA.Core.Engine.Extensions.Html.Resources.QP8BackendApi.Interaction.js";

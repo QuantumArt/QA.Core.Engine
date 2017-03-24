@@ -16,7 +16,10 @@ namespace QA.Core.Engine.Data
         static string DefaultCultureToken = "ru-ru";
         static RequestLocal<UrlMatchingResult> _currentResult = new RequestLocal<UrlMatchingResult>();
         static RequestLocal<bool> _isResolved = new RequestLocal<bool>();
-        protected static string[] _cultures = CultureInfo.GetCultures(CultureTypes.AllCultures).Select(x => x.Name.ToLower()).ToArray();
+        protected static string[] _cultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
+            .Select(x => x.Name.ToLower())
+            .Where(x => x.Length == 5)
+            .ToArray();
 
         protected virtual UrlTokenMatcher GetMatcher()
         {
@@ -63,32 +66,47 @@ namespace QA.Core.Engine.Data
 
             var result = matcher.Match(url, GetRegionCodes(), GetValidCultures(), true);
 
+            regionToken = null;
+            cultureToken = null;
+
             _isResolved.Value = true;
             _currentResult.Value = result;
 
             if (result.IsMatch)
             {
                 regionToken = result.Region;
-
-                var queryToken = url.GetQuery(PathData.CultureQueryKey);
-
-                if (!string.IsNullOrWhiteSpace(queryToken))
-                {
-                    if (ContentRoute.TokenPattern.IsMatch(queryToken))
-                    {
-                        result.Culture = queryToken.Trim();
-                    }
-                }
-
                 cultureToken = result.Culture;
+
+                CheckOverrides(url, ref result, ref cultureToken, ref regionToken);
+
                 return result.SanitizedUrl;
             }
-
-
-            regionToken = null;
-            cultureToken = null;
+            else
+            {
+                CheckOverrides(url, ref result, ref cultureToken, ref regionToken);
+            }
 
             return url;
+        }
+
+        private void CheckOverrides(Url url, ref UrlMatchingResult result, ref string cultureToken, ref string regionToken)
+        {
+            var cqueryToken = (url.GetQuery(PathData.CultureQueryKey) ?? "").ToLower(); ;
+            var rqueryToken = (url.GetQuery(PathData.RegionQueryKey) ?? "").ToLower(); ;
+
+            if (!string.IsNullOrWhiteSpace(cqueryToken) && GetValidCultures().Contains(cqueryToken))
+            {
+                cultureToken = cqueryToken;
+                result.IsMatch = true;
+                result.Culture = cqueryToken;
+            }
+
+            if (!string.IsNullOrWhiteSpace(rqueryToken) && GetRegionCodes().Contains(rqueryToken))
+            {
+                regionToken = rqueryToken;
+                result.IsMatch = true;
+                result.Region = rqueryToken;
+            }
         }
 
 

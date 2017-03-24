@@ -11,10 +11,11 @@ using QA.Core.Engine.Web;
 using System.Web;
 using QA.Core;
 using QA.Core.Engine.Filters;
+using System.Text;
 
 namespace QA.Engine.Extensions.Html
 {
-    public class ZoneHelper
+    public class ZoneHelper : IHtmlString
     {
         protected HtmlHelper Html { get; set; }
         protected TagBuilder Wrapper { get; set; }
@@ -25,6 +26,7 @@ namespace QA.Engine.Extensions.Html
         string _currentPageUrl;
 
         private ItemFilter _filter;
+        private static ItemFilter _defaultFilter = new NullFilter();
 
         protected ItemFilter Filter
         {
@@ -51,9 +53,14 @@ namespace QA.Engine.Extensions.Html
             Html = helper;
             _filter = new NullFilter();
 
-            if (Html.ViewContext.HttpContext.Request.IsAjaxRequest() && CurrentPage != null)
+
+            if (Html.ViewContext.HttpContext.Request.IsAjaxRequest())
             {
-                _currentPageUrl = CurrentPage.AncestorTrail;
+                var referrer = Html.ViewContext.HttpContext.Request.UrlReferrer;
+                if (referrer != null)
+                {
+                    _currentPageUrl = new Url(referrer.ToString()).Path;
+                }
             }
 
             if (_currentPageUrl == null)
@@ -69,9 +76,6 @@ namespace QA.Engine.Extensions.Html
                     _currentPageUrl = url.Path;
                 }
             }
-
-            //helper.ViewContext.RouteData.ResolveService<ICultureUrlResolver>().AddTokensToUrl
-
         }
 
         #region Fluent
@@ -99,11 +103,7 @@ namespace QA.Engine.Extensions.Html
 
         public override string ToString()
         {
-            using (var writer = new StringWriter())
-            {
-                Render(writer);
-                return writer.ToString();
-            }
+            return ToHtmlString();
         }
 
         public virtual void Render()
@@ -121,6 +121,11 @@ namespace QA.Engine.Extensions.Html
 
         }
 
+        public static void SetDefaultFilter(ItemFilter defaultFilter)
+        {
+            _defaultFilter = defaultFilter;
+        }
+
         protected virtual IEnumerable<AbstractItem> GetItemsInZone()
         {
             return GetItemsInZoneInternal().OrderBy(x => x.SortOrder);
@@ -135,6 +140,7 @@ namespace QA.Engine.Extensions.Html
                 {
                     return StartPage.GetChildren(
                         new AllFilter(_filter,
+                            _defaultFilter,
                             new IsPartFilter(),
                             regionFilter)
                         )
@@ -154,6 +160,7 @@ namespace QA.Engine.Extensions.Html
                     {
                         items.AddRange(node.GetChildren(
                             new AllFilter(_filter,
+                                _defaultFilter,
                                 new IsPartFilter(),
                                 new DelegateFilter(x =>
                                 {
@@ -181,7 +188,7 @@ namespace QA.Engine.Extensions.Html
                     return items;
                 }
 
-                return CurrentItem.GetChildren(new AllFilter(_filter, new IsPartFilter(), regionFilter)).Where(x => ZoneName.Equals(x.ZoneName, StringComparison.InvariantCultureIgnoreCase));
+                return CurrentItem.GetChildren(new AllFilter(_filter, _defaultFilter, new IsPartFilter(), regionFilter)).Where(x => ZoneName.Equals(x.ZoneName, StringComparison.InvariantCultureIgnoreCase));
             }
 
             return new AbstractItem[] { };
@@ -196,7 +203,6 @@ namespace QA.Engine.Extensions.Html
             if (_currentPageUrl != null)
             {
                 f = new UrlPartFilter(_currentPageUrl);
-
             }
 
             return new AllFilter(f,
@@ -209,10 +215,22 @@ namespace QA.Engine.Extensions.Html
             if (Wrapper != null)
                 writer.Write(Wrapper.ToString(TagRenderMode.StartTag));
 
-            Renderer.RenderTemplate(model, Html);
+            Renderer.RenderTemplate(model, Html, writer);
 
             if (Wrapper != null)
                 writer.WriteLine(Wrapper.ToString(TagRenderMode.EndTag));
+        }
+
+        public string ToHtmlString()
+        {
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
+            {
+                writer.WriteLine(string.Format("<!-- The beginning of the \'{0}\' zone. -->", ZoneName));
+                Render(writer);
+                writer.WriteLine(string.Format("<!-- The end of the \'{0}\' zone. -->", ZoneName));
+                return sb.ToString();
+            }
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using QA.Core.Engine.Data;
 using QA.Core.Engine.UI;
 
@@ -21,23 +18,23 @@ namespace QA.Core.Engine.QPData
             var modelBasedList = base.PrepareItems();
             var ctx = LinqHelper.Context;
 
-            var fromDB = ctx.QPDiscriminators
+            var fromDb = ctx.QPDiscriminators
                 .Select(x => x)
                 .ToList();
 
-            foreach (var item in fromDB)
+            foreach (var item in fromDb)
             {
                 var foundItem = modelBasedList.FirstOrDefault(x => item.Name.Equals(x.Discriminator));
                 if (foundItem == null)
                 {
-                    Debug.WriteLine(string.Format("Definition with name {0} is not found.", item.Name));
-                    _logger.Info(_ => string.Format("Definition with name {0} is not found.", item.Name));
+                    Debug.WriteLine($"Definition with name {item.Name} is not found.");
+                    _logger.Info(_ => $"Definition with name {item.Name} is not found.");
                     continue;
                 }
 
                 foundItem.IconUrl = item.IconUrlUrl;
                 foundItem.Title = item.Title;
-                foundItem.Description = item.Description ?? foundItem.Description; 
+                foundItem.Description = item.Description ?? foundItem.Description;
                 foundItem.PreferredContentId = item.PreferredContentId;
                 foundItem.Id = item.Id;
                 foundItem.Category = item.CategoryName ?? foundItem.Category;

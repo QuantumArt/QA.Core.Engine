@@ -119,12 +119,13 @@
     <Compile Include="DefinitionManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Integration\QPStorageTests.cs" />
+    <Compile Include="UrlResolverTests.cs" />
     <Compile Include="UrlTrailiing_Tests.cs" />
-    <Compile Include="UnitTest2.cs" />
     <Compile Include="TokenMatcherTests.cs" />
     <Compile Include="UnitTest3.cs" />
     <Compile Include="UnitTest4.cs" />
     <Compile Include="UrlLocker.cs" />
+    <Compile Include="VersioningFilterHierarchyTests.cs" />
     <Compile Include="VersioningFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>

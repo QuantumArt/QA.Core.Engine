@@ -1,8 +1,10 @@
 ﻿
 using Quantumart.QPublishing.Database;
+using Quantumart.QPublishing.Info;
 using System.Collections;
-using System.Web;
+using System.Collections.Generic;
 using System;
+using System.Globalization;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
@@ -17,438 +19,422 @@ public partial class QPContext
 
 
     
-	private Hashtable PackQPAbstractItem(QPAbstractItem instance)
-	{
-		Hashtable Values = new Hashtable();
-		
-   if (instance.Title != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Title"), ReplaceUrls(instance.Title)); }
+    private Dictionary<string,string> PackQPAbstractItem(QPAbstractItem instance)
+    {
+        var values = GetInitialValues(instance);
 
-   if (instance.Name != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Name"), ReplaceUrls(instance.Name)); }
+        if (instance.Title != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Title")).Name] = instance.Title; }
 
-   if (instance.Parent_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Parent"), instance.Parent_ID.ToString()); }
+        if (instance.Name != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Name")).Name] = instance.Name; }
 
-   if (instance.IsVisible != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "IsVisible"), ((bool)instance.IsVisible) ? "1" : "0"); }
+        if (instance.Parent_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Parent")).Name] = instance.Parent_ID.ToString(); }
 
-   if (instance.IsPage != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "IsPage"), ((bool)instance.IsPage) ? "1" : "0"); }
+        if (instance.IsVisible != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "IsVisible")).Name] = instance.IsVisible.Value ? "1" : "0"; }
 
-   if (instance.ZoneName != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "ZoneName"), ReplaceUrls(instance.ZoneName)); }
+        if (instance.IsPage != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "IsPage")).Name] = instance.IsPage.Value ? "1" : "0"; }
 
-   if (instance.AllowedUrlPatterns != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "AllowedUrlPatterns"), ReplaceUrls(instance.AllowedUrlPatterns)); }
+        if (instance.Regions != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Regions")).Name] = instance.RegionsString; }
 
-   if (instance.DeniedUrlPatterns != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "DeniedUrlPatterns"), ReplaceUrls(instance.DeniedUrlPatterns)); }
+        if (instance.ZoneName != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "ZoneName")).Name] = instance.ZoneName; }
 
-   if (instance.Description != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Description"), ReplaceUrls(instance.Description)); }
+        if (instance.AllowedUrlPatterns != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "AllowedUrlPatterns")).Name] = instance.AllowedUrlPatterns; }
 
-   if (instance.Discriminator_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Discriminator"), instance.Discriminator_ID.ToString()); }
+        if (instance.DeniedUrlPatterns != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "DeniedUrlPatterns")).Name] = instance.DeniedUrlPatterns; }
 
-   if (instance.ContentId != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "ContentId"), instance.ContentId.ToString()); }
+        if (instance.Description != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Description")).Name] = instance.Description; }
 
-   if (instance.VersionOf_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "VersionOf"), instance.VersionOf_ID.ToString()); }
+        if (instance.Discriminator_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Discriminator")).Name] = instance.Discriminator_ID.ToString(); }
 
-   if (instance.Culture_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Culture"), instance.Culture_ID.ToString()); }
+        if (instance.ContentId != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "ContentId")).Name] = instance.ContentId.ToString(); }
 
-   if (instance.TitleFormat_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "TitleFormat"), instance.TitleFormat_ID.ToString()); }
+        if (instance.VersionOf_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "VersionOf")).Name] = instance.VersionOf_ID.ToString(); }
 
-   if (instance.Keywords != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Keywords"), ReplaceUrls(instance.Keywords)); }
+        if (instance.Culture_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Culture")).Name] = instance.Culture_ID.ToString(); }
 
-   if (instance.MetaDescription != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "MetaDescription"), ReplaceUrls(instance.MetaDescription)); }
+        if (instance.TitleFormat_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "TitleFormat")).Name] = instance.TitleFormat_ID.ToString(); }
 
-   if (instance.Tags != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "Tags"), ReplaceUrls(instance.Tags)); }
+        if (instance.Keywords != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Keywords")).Name] = instance.Keywords; }
 
-   if (instance.IsInSiteMap != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "IsInSiteMap"), ((bool)instance.IsInSiteMap) ? "1" : "0"); }
+        if (instance.MetaDescription != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "MetaDescription")).Name] = instance.MetaDescription; }
 
-   if (instance.IndexOrder != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "IndexOrder"), instance.IndexOrder.ToString()); }
+        if (instance.Tags != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Tags")).Name] = instance.Tags; }
 
-   if (instance.ExtensionId != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPAbstractItem", "ExtensionId"), instance.ExtensionId.ToString()); }
+        if (instance.IsInSiteMap != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "IsInSiteMap")).Name] = instance.IsInSiteMap.Value ? "1" : "0"; }
 
-		return Values;
-	}
-	
+        if (instance.IndexOrder != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "IndexOrder")).Name] = instance.IndexOrder.ToString(); }
 
-	partial void InsertQPAbstractItem(QPAbstractItem instance) 
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPAbstractItem(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime created = DateTime.Now;
-		instance.LoadStatusType();
-		instance.Id = Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPAbstractItem"), instance.StatusType.Name, ref Values, ref cl, 0, true, 0, instance.Visible, instance.Archive, true, ref created);
-		instance.Created = created;
-		instance.Modified = created;
-            
-	}
+        if (instance.ExtensionId != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "ExtensionId")).Name] = instance.ExtensionId.ToString(); }
 
-	partial void UpdateQPAbstractItem(QPAbstractItem instance)
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPAbstractItem(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime modified = DateTime.Now;
-		Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPAbstractItem"), instance.StatusType.Name, ref Values, ref cl, (int)instance.Id, true, 0, instance.Visible, instance.Archive, true, ref modified);
-		instance.Modified = modified;
-            		
-	}			
+        if (instance.AuthenticationTargeting != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "AuthenticationTargeting")).Name] = instance.AuthenticationTargeting; }
 
-	partial void DeleteQPAbstractItem(QPAbstractItem instance)
-	{
-		
-		Cnn.ExternalTransaction = Transaction;	
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
-				
-	}
+        if (instance.Targeting != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPAbstractItem", "Targeting")).Name] = instance.Targeting; }
+
+        return values;
+    }
+
+
+    partial void InsertQPAbstractItem(QPAbstractItem instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPAbstractItem(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPAbstractItem"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Id = Int32.Parse(values[SystemColumnNames.Id]);
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+      instance.Created = instance.Modified;
+
+    }
+
+    partial void UpdateQPAbstractItem(QPAbstractItem instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPAbstractItem(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPAbstractItem"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+
+    }
+
+    partial void DeleteQPAbstractItem(QPAbstractItem instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
+
+    }
  
-	private Hashtable PackQPDiscriminator(QPDiscriminator instance)
-	{
-		Hashtable Values = new Hashtable();
-		
-   if (instance.Title != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "Title"), ReplaceUrls(instance.Title)); }
+    private Dictionary<string,string> PackQPDiscriminator(QPDiscriminator instance)
+    {
+        var values = GetInitialValues(instance);
 
-   if (instance.Name != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "Name"), ReplaceUrls(instance.Name)); }
+        if (instance.Title != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "Title")).Name] = instance.Title; }
 
-   if (instance.PreferredContentId != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "PreferredContentId"), instance.PreferredContentId.ToString()); }
+        if (instance.Name != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "Name")).Name] = instance.Name; }
 
-   if (instance.CategoryName != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "CategoryName"), ReplaceUrls(instance.CategoryName)); }
+        if (instance.PreferredContentId != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "PreferredContentId")).Name] = instance.PreferredContentId.ToString(); }
 
-   if (instance.Description != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "Description"), ReplaceUrls(instance.Description)); }
+        if (instance.CategoryName != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "CategoryName")).Name] = instance.CategoryName; }
 
-   if (instance.IconUrl != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "IconUrl"), instance.IconUrl); }
+        if (instance.Description != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "Description")).Name] = instance.Description; }
 
-   if (instance.IsPage != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "IsPage"), ((bool)instance.IsPage) ? "1" : "0"); }
+        if (instance.IconUrl != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "IconUrl")).Name] = instance.IconUrl; }
 
-   if (instance.AllowedZones != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "AllowedZones"), ReplaceUrls(instance.AllowedZones)); }
+        if (instance.IsPage != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "IsPage")).Name] = instance.IsPage.Value ? "1" : "0"; }
 
-   if (instance.FilterPartByUrl != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPDiscriminator", "FilterPartByUrl"), ((bool)instance.FilterPartByUrl) ? "1" : "0"); }
+        if (instance.AllowedZones != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "AllowedZones")).Name] = instance.AllowedZones; }
 
-		return Values;
-	}
-	
+        if (instance.AllowedItemDefinitions1 != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "AllowedItemDefinitions1")).Name] = instance.AllowedItemDefinitions1String; }
 
-	partial void InsertQPDiscriminator(QPDiscriminator instance) 
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPDiscriminator(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime created = DateTime.Now;
-		instance.LoadStatusType();
-		instance.Id = Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPDiscriminator"), instance.StatusType.Name, ref Values, ref cl, 0, true, 0, instance.Visible, instance.Archive, true, ref created);
-		instance.Created = created;
-		instance.Modified = created;
-            
-	}
+        if (instance.FilterPartByUrl != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPDiscriminator", "FilterPartByUrl")).Name] = instance.FilterPartByUrl.Value ? "1" : "0"; }
 
-	partial void UpdateQPDiscriminator(QPDiscriminator instance)
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPDiscriminator(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime modified = DateTime.Now;
-		Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPDiscriminator"), instance.StatusType.Name, ref Values, ref cl, (int)instance.Id, true, 0, instance.Visible, instance.Archive, true, ref modified);
-		instance.Modified = modified;
-            		
-	}			
+        return values;
+    }
 
-	partial void DeleteQPDiscriminator(QPDiscriminator instance)
-	{
-		
-		Cnn.ExternalTransaction = Transaction;	
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
-				
-	}
+
+    partial void InsertQPDiscriminator(QPDiscriminator instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPDiscriminator(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPDiscriminator"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Id = Int32.Parse(values[SystemColumnNames.Id]);
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+      instance.Created = instance.Modified;
+
+    }
+
+    partial void UpdateQPDiscriminator(QPDiscriminator instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPDiscriminator(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPDiscriminator"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+
+    }
+
+    partial void DeleteQPDiscriminator(QPDiscriminator instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
+
+    }
  
-	private Hashtable PackQPCulture(QPCulture instance)
-	{
-		Hashtable Values = new Hashtable();
-		
-   if (instance.Title != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPCulture", "Title"), ReplaceUrls(instance.Title)); }
+    private Dictionary<string,string> PackQPCulture(QPCulture instance)
+    {
+        var values = GetInitialValues(instance);
 
-   if (instance.Name != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPCulture", "Name"), ReplaceUrls(instance.Name)); }
+        if (instance.Enabled != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "Enabled")).Name] = instance.Enabled.Value ? "1" : "0"; }
 
-   if (instance.Icon != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPCulture", "Icon"), instance.Icon); }
+        if (instance.Title != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "Title")).Name] = instance.Title; }
 
-		return Values;
-	}
-	
+        if (instance.Name != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "Name")).Name] = instance.Name; }
 
-	partial void InsertQPCulture(QPCulture instance) 
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPCulture(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime created = DateTime.Now;
-		instance.LoadStatusType();
-		instance.Id = Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPCulture"), instance.StatusType.Name, ref Values, ref cl, 0, true, 0, instance.Visible, instance.Archive, true, ref created);
-		instance.Created = created;
-		instance.Modified = created;
-            
-	}
+        if (instance.Icon != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "Icon")).Name] = instance.Icon; }
 
-	partial void UpdateQPCulture(QPCulture instance)
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPCulture(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime modified = DateTime.Now;
-		Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPCulture"), instance.StatusType.Name, ref Values, ref cl, (int)instance.Id, true, 0, instance.Visible, instance.Archive, true, ref modified);
-		instance.Modified = modified;
-            		
-	}			
+        if (instance.SortOrder != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "SortOrder")).Name] = instance.SortOrder.ToString(); }
 
-	partial void DeleteQPCulture(QPCulture instance)
-	{
-		
-		Cnn.ExternalTransaction = Transaction;	
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
-				
-	}
+        if (instance.ChangeCultureLabel != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "ChangeCultureLabel")).Name] = instance.ChangeCultureLabel; }
+
+        if (instance.CultureSelectionTitle != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPCulture", "CultureSelectionTitle")).Name] = instance.CultureSelectionTitle; }
+
+        return values;
+    }
+
+
+    partial void InsertQPCulture(QPCulture instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPCulture(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPCulture"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Id = Int32.Parse(values[SystemColumnNames.Id]);
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+      instance.Created = instance.Modified;
+
+    }
+
+    partial void UpdateQPCulture(QPCulture instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPCulture(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPCulture"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+
+    }
+
+    partial void DeleteQPCulture(QPCulture instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
+
+    }
  
-	private Hashtable PackItemTitleFormat(ItemTitleFormat instance)
-	{
-		Hashtable Values = new Hashtable();
-		
-   if (instance.Value != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "ItemTitleFormat", "Value"), ReplaceUrls(instance.Value)); }
+    private Dictionary<string,string> PackItemTitleFormat(ItemTitleFormat instance)
+    {
+        var values = GetInitialValues(instance);
 
-   if (instance.Description != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "ItemTitleFormat", "Description"), ReplaceUrls(instance.Description)); }
+        if (instance.Value != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "ItemTitleFormat", "Value")).Name] = instance.Value; }
 
-		return Values;
-	}
-	
+        if (instance.Description != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "ItemTitleFormat", "Description")).Name] = instance.Description; }
 
-	partial void InsertItemTitleFormat(ItemTitleFormat instance) 
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackItemTitleFormat(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime created = DateTime.Now;
-		instance.LoadStatusType();
-		instance.Id = Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "ItemTitleFormat"), instance.StatusType.Name, ref Values, ref cl, 0, true, 0, instance.Visible, instance.Archive, true, ref created);
-		instance.Created = created;
-		instance.Modified = created;
-            
-	}
+        return values;
+    }
 
-	partial void UpdateItemTitleFormat(ItemTitleFormat instance)
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackItemTitleFormat(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime modified = DateTime.Now;
-		Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "ItemTitleFormat"), instance.StatusType.Name, ref Values, ref cl, (int)instance.Id, true, 0, instance.Visible, instance.Archive, true, ref modified);
-		instance.Modified = modified;
-            		
-	}			
 
-	partial void DeleteItemTitleFormat(ItemTitleFormat instance)
-	{
-		
-		Cnn.ExternalTransaction = Transaction;	
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
-				
-	}
- 
+    partial void InsertItemTitleFormat(ItemTitleFormat instance)
+    {
 
-	partial void InsertQPRegion(QPRegion instance) 
-	{	
-		
-		throw new InvalidOperationException(@"Virtual Contents cannot be modified");	
-			
-	}
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackItemTitleFormat(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "ItemTitleFormat"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Id = Int32.Parse(values[SystemColumnNames.Id]);
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+      instance.Created = instance.Modified;
 
-	partial void UpdateQPRegion(QPRegion instance)
-	{	
-		
-		throw new InvalidOperationException(@"Virtual Contents cannot be modified");	
-					
-	}			
+    }
 
-	partial void DeleteQPRegion(QPRegion instance)
-	{
-		
-		throw new InvalidOperationException(@"Virtual Contents cannot be modified");	
-				
-	}
+    partial void UpdateItemTitleFormat(ItemTitleFormat instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackItemTitleFormat(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "ItemTitleFormat"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+
+    }
+
+    partial void DeleteItemTitleFormat(ItemTitleFormat instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
+
+    }
  
 
-	partial void InsertTrailedAbstractItem(TrailedAbstractItem instance) 
-	{	
-		
-		throw new InvalidOperationException(@"Virtual Contents cannot be modified");	
-			
-	}
+    partial void InsertQPRegion(QPRegion instance)
+    {
 
-	partial void UpdateTrailedAbstractItem(TrailedAbstractItem instance)
-	{	
-		
-		throw new InvalidOperationException(@"Virtual Contents cannot be modified");	
-					
-	}			
+        throw new InvalidOperationException(@"Virtual Contents cannot be modified");
 
-	partial void DeleteTrailedAbstractItem(TrailedAbstractItem instance)
-	{
-		
-		throw new InvalidOperationException(@"Virtual Contents cannot be modified");	
-				
-	}
- 
-	private Hashtable PackQPObsoleteUrl(QPObsoleteUrl instance)
-	{
-		Hashtable Values = new Hashtable();
-		
-   if (instance.Url != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPObsoleteUrl", "Url"), ReplaceUrls(instance.Url)); }
+    }
 
-   if (instance.AbstractItem_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPObsoleteUrl", "AbstractItem"), instance.AbstractItem_ID.ToString()); }
+    partial void UpdateQPRegion(QPRegion instance)
+    {
 
-		return Values;
-	}
-	
+        throw new InvalidOperationException(@"Virtual Contents cannot be modified");
 
-	partial void InsertQPObsoleteUrl(QPObsoleteUrl instance) 
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPObsoleteUrl(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime created = DateTime.Now;
-		instance.LoadStatusType();
-		instance.Id = Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPObsoleteUrl"), instance.StatusType.Name, ref Values, ref cl, 0, true, 0, instance.Visible, instance.Archive, true, ref created);
-		instance.Created = created;
-		instance.Modified = created;
-            
-	}
+    }
 
-	partial void UpdateQPObsoleteUrl(QPObsoleteUrl instance)
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPObsoleteUrl(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime modified = DateTime.Now;
-		Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPObsoleteUrl"), instance.StatusType.Name, ref Values, ref cl, (int)instance.Id, true, 0, instance.Visible, instance.Archive, true, ref modified);
-		instance.Modified = modified;
-            		
-	}			
+    partial void DeleteQPRegion(QPRegion instance)
+    {
 
-	partial void DeleteQPObsoleteUrl(QPObsoleteUrl instance)
-	{
-		
-		Cnn.ExternalTransaction = Transaction;	
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
-				
-	}
- 
-	private Hashtable PackQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
-	{
-		Hashtable Values = new Hashtable();
-		
-   if (instance.Source_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPItemDefinitionConstraint", "Source"), instance.Source_ID.ToString()); }
+        throw new InvalidOperationException(@"Virtual Contents cannot be modified");
 
-   if (instance.Target_ID != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPItemDefinitionConstraint", "Target"), instance.Target_ID.ToString()); }
-
-   if (instance.Title != null)  { Values.Add(Cnn.GetFormNameByNetNames(SiteId, "QPItemDefinitionConstraint", "Title"), ReplaceUrls(instance.Title)); }
-
-		return Values;
-	}
-	
-
-	partial void InsertQPItemDefinitionConstraint(QPItemDefinitionConstraint instance) 
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPItemDefinitionConstraint(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime created = DateTime.Now;
-		instance.LoadStatusType();
-		instance.Id = Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPItemDefinitionConstraint"), instance.StatusType.Name, ref Values, ref cl, 0, true, 0, instance.Visible, instance.Archive, true, ref created);
-		instance.Created = created;
-		instance.Modified = created;
-            
-	}
-
-	partial void UpdateQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
-	{	
-		
-		Cnn.ExternalTransaction = Transaction;
-		Hashtable Values = PackQPItemDefinitionConstraint(instance);
-		HttpFileCollection cl = (HttpFileCollection)null;
-		DateTime modified = DateTime.Now;
-		Cnn.AddFormToContent(SiteId, Cnn.GetContentIdByNetName(SiteId, "QPItemDefinitionConstraint"), instance.StatusType.Name, ref Values, ref cl, (int)instance.Id, true, 0, instance.Visible, instance.Archive, true, ref modified);
-		instance.Modified = modified;
-            		
-	}			
-
-	partial void DeleteQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
-	{
-		
-		Cnn.ExternalTransaction = Transaction;	
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
-				
-	}
+    }
  
 
-	partial void InsertAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
-	{
-		Cnn.ExternalTransaction = Transaction;
-		int linkId = Cnn.GetLinkIdByNetName(SiteId, "AbstractItemAbtractItemRegionArticle");
-		
-		if (linkId == 0)
-			throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "AbstractItemAbtractItemRegionArticle", SiteId));
-			
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'if not exists(select * from item_link where link_id = @linkId and item_id = @itemId and linked_item_id = @linkedItemId) insert into item_to_item values(@linkId, @itemId, @linkedItemId)', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", linkId, instance.ITEM_ID, instance.LINKED_ITEM_ID));
-	}
+    partial void InsertTrailedAbstractItem(TrailedAbstractItem instance)
+    {
 
-	partial void UpdateAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
-	{
-	
-	}
+        throw new InvalidOperationException(@"Virtual Contents cannot be modified");
 
-	partial void DeleteAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
-	{
-		Cnn.ExternalTransaction = Transaction;
-		Cnn.ProcessData(instance.RemovingInstruction);
-	}
-    
+    }
 
-	partial void InsertItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
-	{
-		Cnn.ExternalTransaction = Transaction;
-		int linkId = Cnn.GetLinkIdByNetName(SiteId, "ItemDefinitionItemDefinitionArticle");
-		
-		if (linkId == 0)
-			throw new Exception(String.Format("Junction class '{0}' is not found on the site (ID = {1})", "ItemDefinitionItemDefinitionArticle", SiteId));
-			
-		Cnn.ProcessData(String.Format("EXEC sp_executesql N'if not exists(select * from item_link where link_id = @linkId and item_id = @itemId and linked_item_id = @linkedItemId) insert into item_to_item values(@linkId, @itemId, @linkedItemId)', N'@linkId NUMERIC, @itemId NUMERIC, @linkedItemId NUMERIC', @linkId = {0}, @itemId = {1}, @linkedItemId = {2}", linkId, instance.ITEM_ID, instance.LINKED_ITEM_ID));
-	}
+    partial void UpdateTrailedAbstractItem(TrailedAbstractItem instance)
+    {
 
-	partial void UpdateItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
-	{
-	
-	}
+        throw new InvalidOperationException(@"Virtual Contents cannot be modified");
 
-	partial void DeleteItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
-	{
-		Cnn.ExternalTransaction = Transaction;
-		Cnn.ProcessData(instance.RemovingInstruction);
-	}
-    
+    }
 
-	partial void InsertStatusType(StatusType instance) 
-	{
-	}
+    partial void DeleteTrailedAbstractItem(TrailedAbstractItem instance)
+    {
 
-	partial void UpdateStatusType(StatusType instance)
-	{
-	}			
+        throw new InvalidOperationException(@"Virtual Contents cannot be modified");
 
-	partial void DeleteStatusType(StatusType instance)
-	{
-	}
+    }
+ 
+    private Dictionary<string,string> PackQPObsoleteUrl(QPObsoleteUrl instance)
+    {
+        var values = GetInitialValues(instance);
+
+        if (instance.Url != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPObsoleteUrl", "Url")).Name] = instance.Url; }
+
+        if (instance.AbstractItem_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPObsoleteUrl", "AbstractItem")).Name] = instance.AbstractItem_ID.ToString(); }
+
+        return values;
+    }
+
+
+    partial void InsertQPObsoleteUrl(QPObsoleteUrl instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPObsoleteUrl(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPObsoleteUrl"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Id = Int32.Parse(values[SystemColumnNames.Id]);
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+      instance.Created = instance.Modified;
+
+    }
+
+    partial void UpdateQPObsoleteUrl(QPObsoleteUrl instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPObsoleteUrl(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPObsoleteUrl"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+
+    }
+
+    partial void DeleteQPObsoleteUrl(QPObsoleteUrl instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
+
+    }
+ 
+    private Dictionary<string,string> PackQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
+    {
+        var values = GetInitialValues(instance);
+
+        if (instance.Source_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPItemDefinitionConstraint", "Source")).Name] = instance.Source_ID.ToString(); }
+
+        if (instance.Target_ID != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPItemDefinitionConstraint", "Target")).Name] = instance.Target_ID.ToString(); }
+
+        if (instance.Title != null)  { values[Cnn.GetContentAttributeObject(Cnn.GetAttributeIdByNetNames(SiteId, "QPItemDefinitionConstraint", "Title")).Name] = instance.Title; }
+
+        return values;
+    }
+
+
+    partial void InsertQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPItemDefinitionConstraint(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPItemDefinitionConstraint"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Id = Int32.Parse(values[SystemColumnNames.Id]);
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+      instance.Created = instance.Modified;
+
+    }
+
+    partial void UpdateQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        var values = PackQPItemDefinitionConstraint(instance);
+        Cnn.MassUpdate(Cnn.GetContentIdByNetName(SiteId, "QPItemDefinitionConstraint"), new List<Dictionary<string, string>>() { values }, Cnn.LastModifiedBy
+          , new MassUpdateOptions() { ReplaceUrls = true});
+      instance.Modified = DateTime.Parse(values[SystemColumnNames.Modified], CultureInfo.InvariantCulture);
+
+    }
+
+    partial void DeleteQPItemDefinitionConstraint(QPItemDefinitionConstraint instance)
+    {
+
+        Cnn.ExternalTransaction = Transaction;
+        Cnn.ProcessData(String.Format("EXEC sp_executesql N'delete from content_item where content_item_id = @itemId', N'@itemId NUMERIC', @itemId = {0}", instance.Id.ToString()));
+
+    }
+ 
+
+    partial void InsertAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
+    {
+    }
+
+    partial void UpdateAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
+    {
+    }
+
+    partial void DeleteAbstractItemAbtractItemRegionArticle(AbstractItemAbtractItemRegionArticle instance)
+    {
+    }
+
+
+    partial void InsertItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
+    {
+    }
+
+    partial void UpdateItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
+    {
+    }
+
+    partial void DeleteItemDefinitionItemDefinitionArticle(ItemDefinitionItemDefinitionArticle instance)
+    {
+    }
+
+
+    partial void InsertStatusType(StatusType instance)
+    {
+    }
+
+    partial void UpdateStatusType(StatusType instance)
+    {
+    }
+
+    partial void DeleteStatusType(StatusType instance)
+    {
+    }
 }
 
 

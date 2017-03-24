@@ -20,7 +20,9 @@ namespace QA.Core.Engine
     /// </summary>
     public class ContentRoute : RouteBase
     {
-
+        private const string _savedPathDataItemsKey = @"ContentRoute\<ui-item>\saved_key";
+        private const string _savedRouteDataItemsKey = @"ContentRoute\<routedata>\saved_key";
+        private const string _savedRouteValuesItemsKey = @"ContentRoute\<routevalues>\saved_key";
         static ContentRoute()
         {
             IgnoreVirtualPath = false;
@@ -81,12 +83,12 @@ namespace QA.Core.Engine
         public const string AreaKey = "area";
         public const string ActionKey = "action";
 
-        readonly IEngine _engine;
-        readonly IRouteHandler _routeHandler;
-        readonly IControllerMapper _controllerMapper;
-        readonly Route _innerRoute;
+        protected readonly IEngine _engine;
+        protected readonly IRouteHandler _routeHandler;
+        protected readonly IControllerMapper _controllerMapper;
+        protected readonly Route _innerRoute;
 
-        internal static readonly Regex TokenPattern = new Regex(@"^[a-zA-Z_-]+$");
+        internal static readonly Regex TokenPattern = new Regex(@"^[a-zA-Z_\-0-9]+$");
 
         public ContentRoute(IEngine engine)
             : this(engine, null, null, null)
@@ -151,6 +153,14 @@ namespace QA.Core.Engine
         /// <returns></returns>
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
+            var data = GetSavedRouteData(httpContext) ??
+                    GetRouteDataInternal(httpContext);
+
+            return data;
+        }
+
+        private RouteData GetRouteDataInternal(HttpContextBase httpContext)
+        {
             string path = ExtractPath(httpContext.Request);
 
             if (path.EndsWith(".axd", StringComparison.InvariantCultureIgnoreCase))
@@ -190,7 +200,14 @@ namespace QA.Core.Engine
             string host = (request.Url.IsDefaultPort) ? request.Url.Host : request.Url.Authority;
             string hostAndRawUrl = String.Format("{0}://{1}{2}", request.Url.Scheme, host,
                 (IgnoreVirtualPath ? request.Path : Url.ToAbsolute(ExtractPath(request))));
-            PathData td = _engine.UrlParser.ResolvePath(hostAndRawUrl);
+
+            PathData td = (request.RequestContext.HttpContext.Items[_savedPathDataItemsKey] as PathData) ??
+                _engine.UrlParser.ResolvePath(hostAndRawUrl);
+
+            if (!td.IsEmpty())
+            {
+                request.RequestContext.HttpContext.Items[_savedPathDataItemsKey] = td;
+            }
 
             var page = td.CurrentPage;
 
@@ -221,6 +238,7 @@ namespace QA.Core.Engine
 
             if (page == null && part == null)
                 return null;
+
             else if (page == null)
             {
                 page = part.ClosestPage();
@@ -234,12 +252,16 @@ namespace QA.Core.Engine
             if (actionName == null || !_controllerMapper.ControllerHasAction(controllerName, actionName))
                 return null;
 
-            var data = new RouteData(this, _routeHandler);
+            var data = SetRouteValues(page, td);
 
-            foreach (var defaultPair in _innerRoute.Defaults)
+            if (data == null)
             {
-                data.Values[defaultPair.Key] = defaultPair.Value;
+                return null;
             }
+
+            if (data.Values.ContainsKey("action"))
+                actionName = data.Values["action"].ToString();
+
             foreach (var tokenPair in _innerRoute.DataTokens)
             {
                 data.DataTokens[tokenPair.Key] = tokenPair.Value;
@@ -249,7 +271,7 @@ namespace QA.Core.Engine
             data.DataTokens["CurrentRegionToken"] = td.RegionToken;
 
             // workaround for routes with id token applied to NewsPage for QP8 data
-            if (_innerRoute.Url.EndsWith("/{id}") && !string.IsNullOrEmpty(td.Argument))
+            if (td.RouteData == null && _innerRoute.Url == ("{controller}/{action}/{id}") && !string.IsNullOrEmpty(td.Argument))
             {
                 data.Values["id"] = td.Argument.TrimEnd('/');
             }
@@ -264,12 +286,25 @@ namespace QA.Core.Engine
             return data;
         }
 
+        protected virtual RouteData SetRouteValues(AbstractItem item, PathData td)
+        {
+            var data = new RouteData(this, _routeHandler);
+
+            foreach (var defaultPair in td.RouteData == null ? _innerRoute.Defaults : td.RouteData.Values)
+            {
+                if (defaultPair.Key != "action" && defaultPair.Key != "controller")
+                    data.Values[defaultPair.Key] = defaultPair.Value;
+            }
+
+            return data;
+        }
+
         private static string ExtractPath(HttpRequestBase request)
         {
             return request.AppRelativeCurrentExecutionFilePath;
         }
 
-        /// <summary>Обрабатывает запрос вида /{controller}/{action}/?ui-page=123&ui-item=234</summary>
+        /// <summary>Обрабатывает запрос вида /{controller}/{action}/?ui-page=123&amp;ui-item=234</summary>
         private RouteData CheckForContentController(HttpContextBase context)
         {
             var routeData = _innerRoute.GetRouteData(context);
@@ -551,5 +586,24 @@ namespace QA.Core.Engine
 
             return true;
         }
+
+        protected void SaveRouteData(RouteData routeData, HttpContextBase context)
+        {
+            context.Items[_savedRouteDataItemsKey] = routeData;
+        }
+
+        protected RouteData GetSavedRouteData(HttpContextBase context)
+        {
+            RouteData routeData = null;
+            if (context.Items.Contains(_savedRouteDataItemsKey))
+            {
+                routeData = (RouteData)context.Items[_savedRouteDataItemsKey];
+                context.Items.Remove(_savedRouteDataItemsKey);
+            }
+            return routeData;
+        }
+
     }
+
+
 }

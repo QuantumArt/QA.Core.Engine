@@ -6,7 +6,17 @@ using QA.Core.Engine.Web;
 
 namespace QA.Core.Engine.Data
 {
-    public class FakeUrlParserDecorator : IUrlParser
+    [Obsolete("Use UrlParserDecorator instead.")]
+    public class FakeUrlParserDecorator : UrlParserDecorator
+    {
+        public FakeUrlParserDecorator(IPersister persister, ICacheProvider cacheProvider, ICultureUrlResolver cultureResolver)
+            : base(persister, cacheProvider, cultureResolver)
+        {
+
+        }
+    }
+
+    public class UrlParserDecorator : IUrlParser
     {
         readonly IUrlParser _inner;
         readonly IPersister _persister;
@@ -14,7 +24,7 @@ namespace QA.Core.Engine.Data
         private ICacheProvider _cacheProvider;
         private ICultureUrlResolver _cultureResolver;
 
-        public FakeUrlParserDecorator(IPersister persister, ICacheProvider cacheProvider, ICultureUrlResolver cultureResolver)
+        public UrlParserDecorator(IPersister persister, ICacheProvider cacheProvider, ICultureUrlResolver cultureResolver)
         {
             this._inner = ObjectFactoryBase.Resolve<IUrlParser>("original");
             this._persister = persister;
