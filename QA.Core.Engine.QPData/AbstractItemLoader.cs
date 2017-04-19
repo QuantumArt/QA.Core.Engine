@@ -183,7 +183,9 @@ namespace QA.Core.Engine.QPData
                         newItem.ZoneName = item.Value.ZoneName;
                         newItem.IsVisible = item.Value.IsVisible ?? false;
                         newItem.IsInSitemap = item.Value.IsInSiteMap ?? false;
-                        newItem.SortOrder = item.Value.IndexOrder ?? 0;
+                        newItem.SortOrder = (item.Value.IndexOrder == null || item.Value.IndexOrder == 0)
+                            ? GetOrderFromGeneralVersion(item.Value.VersionOf_ID)
+                            : item.Value.IndexOrder.Value;
                         newItem.IsPublished = item.Value.StatusTypeName.Equals("published", StringComparison.InvariantCultureIgnoreCase);
                         newItems.Add(newItem.Id, newItem);
                         newItem.Created = item.Value.Created;
@@ -287,7 +289,7 @@ namespace QA.Core.Engine.QPData
                                 }
                                 else
                                 {
-                                    // TODO: get attribute                                   
+                                    // TODO: get attribute
                                 }
 
                                 value = ctx.ReplacePlaceholders(stringValue);
@@ -361,6 +363,20 @@ namespace QA.Core.Engine.QPData
                     }
                 }
                 Model.Root = root;
+            }
+        }
+
+        protected int GetOrderFromGeneralVersion(int? GeneralId)
+        {
+            if (!GeneralId.HasValue)
+            {
+                return 0;
+            }
+            else
+            {
+                var ctx = LinqHelper.Context;
+                var res = ctx.QPAbstractItems.Where(w => w.Id == GeneralId).Select(s => s.IndexOrder).First();
+                return res.HasValue ? res.Value : 0;
             }
         }
 
