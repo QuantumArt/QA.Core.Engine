@@ -287,7 +287,7 @@ namespace QA.Core.Engine.QPData
                                 }
                                 else
                                 {
-                                    // TODO: get attribute                                   
+                                    // TODO: get attribute
                                 }
 
                                 value = ctx.ReplacePlaceholders(stringValue);
@@ -339,6 +339,19 @@ namespace QA.Core.Engine.QPData
                         item.AttachVersionTo(version);
                     }
                 }
+            }
+
+            foreach (var item in newItems.Values)
+            {
+                if (item.SortOrder == 0 && item.VersionOfId != null && item.VersionOfId > 0)
+                {
+                    AbstractItem generalItem = null;
+                    if (newItems.TryGetValue(item.VersionOfId.Value, out generalItem))
+                    {
+                        item.SortOrder = generalItem.SortOrder;
+                    }
+                }
+
             }
 
             // process exchanging the data
