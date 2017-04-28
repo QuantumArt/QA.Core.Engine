@@ -86,8 +86,8 @@
       <HintPath>..\packages\QA.Core.3.0.3.0\lib\net45\QA.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="QA.Core.Data, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QA.Core.Data.3.0.2.0\lib\net45\QA.Core.Data.dll</HintPath>
+    <Reference Include="QA.Core.Data, Version=3.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QA.Core.Data.3.0.4\lib\net45\QA.Core.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="QA.Core.Service.Interaction, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
