@@ -13,6 +13,7 @@
     <tags>Core Widgets Engine</tags>
       <dependencies>
           <dependency id="QA.Core.Engine" version="2.1.0" />
+          <dependency id="QA.Core.Data" version="3.0.4" />
       </dependencies>
   </metadata>
 </package>

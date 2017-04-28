@@ -45,8 +45,15 @@ namespace QA.Core.Engine.QPData.Context
         /// </summary>
         protected override void OnCreated()
         {
-            QPContext.DefaultConnectionString = ConfigurationManager
-                .ConnectionStrings[_connectionStringName].ConnectionString;
+            var connectionStringSettings = ConfigurationManager.ConnectionStrings[ConnectionString];
+            if (connectionStringSettings != null)
+            {
+                QPContext.DefaultConnectionString = connectionStringSettings.ConnectionString;
+            }
+            else
+            {
+                QPContext.DefaultConnectionString = ConnectionString;
+            }
 
             if (!string.IsNullOrEmpty(_siteName))
             {
