@@ -34,7 +34,7 @@ using System.Windows.Markup;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.1.4.0")]
-[assembly: AssemblyFileVersion("2.1.4.0-alpha2")]
+[assembly: AssemblyFileVersion("2.1.4.0")]
 [assembly: InternalsVisibleTo("QA.Engine.Administration.Tests")]
 
 [assembly: XmlnsDefinition("http://artq.com/configuration", "QA.Core.Engine.QPData")]
