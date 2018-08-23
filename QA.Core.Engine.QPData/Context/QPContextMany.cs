@@ -1,14 +1,11 @@
-﻿
-using System.Data.Linq;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using System;
-using System.Collections;
-using System.ComponentModel;
 
-    
-namespace QA.Core.Engine.QPData 
+#pragma warning disable 1591
+
+
+namespace QA.Core.Engine.QPData
 {
 
 public partial class QPAbstractItem
@@ -197,7 +194,7 @@ public partial class AbstractItemAbtractItemRegionArticle : QPLinkBase, IQPLink
         PropertyChanging = null;
         PropertyChanged = null;
 
-        
+
         this._QPAbstractItem1 = Detach(this._QPAbstractItem1);
 
         this._QPRegion1 = Detach(this._QPRegion1);
@@ -237,7 +234,7 @@ public partial class ItemDefinitionItemDefinitionArticle : QPLinkBase, IQPLink
         }
     }
 
-        
+
     [Obsolete]
     public decimal ITEM_ID
     {

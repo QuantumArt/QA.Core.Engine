@@ -4,6 +4,7 @@ using QA.Core.Engine.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {

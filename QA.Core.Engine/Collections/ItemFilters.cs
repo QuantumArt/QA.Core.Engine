@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Collections
 {
     public abstract class ItemFilter : IDisposable
-    {      
+    {
         public abstract bool Match(AbstractItem item);
 
         public virtual void Filter(IList<AbstractItem> items)
@@ -21,7 +22,7 @@ namespace QA.Core.Engine.Collections
                 }
             }
         }
-             
+
         public virtual IEnumerable<T> Pipe<T>(IEnumerable<T> items)
             where T : AbstractItem
         {
@@ -41,14 +42,14 @@ namespace QA.Core.Engine.Collections
         {
             return Pipe<AbstractItem>(items);
         }
-     
+
         public static void Filter(IList<AbstractItem> items, ItemFilter filter)
         {
             filter.Filter(items);
         }
 
         #region IDisposable Members
-                
+
         public virtual void Dispose()
         {
             // do nothing
@@ -161,7 +162,7 @@ namespace QA.Core.Engine.Collections
             Filter(items, new InverseFilter(filterToInverse));
         }
     }
-    
+
     public class NullFilter : ItemFilter
     {
         public override bool Match(AbstractItem item)
@@ -216,7 +217,7 @@ namespace QA.Core.Engine.Collections
         {
             this.filters = new List<ItemFilter>(filters).ToArray();
         }
-               
+
         public ItemFilter[] Filters
         {
             get { return filters; }

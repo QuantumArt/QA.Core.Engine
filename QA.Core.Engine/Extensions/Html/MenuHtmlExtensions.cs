@@ -2,6 +2,7 @@
 using QA.Core.Engine;
 using QA.Core.Engine.Web;
 using QA.Core.Engine.Web.Mvc;
+#pragma warning disable 1591
 
 namespace QA.Engine.Extensions.Html
 {

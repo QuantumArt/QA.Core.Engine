@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using QA.Core.Engine.Data;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.FakeImpl
 {

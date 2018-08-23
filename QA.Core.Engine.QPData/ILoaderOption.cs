@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Quantumart.QPublishing.Database;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {

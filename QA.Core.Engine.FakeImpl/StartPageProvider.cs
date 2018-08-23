@@ -7,6 +7,7 @@ using System.Web;
 using QA.Core.Engine.FakeImpl;
 using QA.Core.Engine.Web;
 using QA.Core.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data
 {
@@ -45,7 +46,7 @@ namespace QA.Core.Engine.Data
             {
                 currentDns = HttpContext.Current.Request.Url.Authority;
             }
-            
+
             if (_matcher.Value != null)
             {
                 var value = _matcher.Value.MatchLongest(currentDns);
@@ -79,7 +80,7 @@ namespace QA.Core.Engine.Data
                 } return ((IRootPage)root).DefaultStartPageId;
             }
 
-           
+
         }
 
         private Dictionary<string, int> GetMappings(AbstractItem root)

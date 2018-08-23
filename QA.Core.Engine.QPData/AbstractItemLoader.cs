@@ -11,6 +11,8 @@ using System.Transactions;
 using QA.Core.Data.Collections;
 using QA.Core.Engine.UI;
 using QA.Core.Engine.Web;
+using QA.Core.Logger;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {
@@ -23,8 +25,8 @@ namespace QA.Core.Engine.QPData
         private readonly IEngine _engine;
         private readonly IDefinitionManager _manager;
 
-        private readonly static Regex FieldExpr = new Regex(@"^field_[0-9]+/", RegexOptions.Compiled);
-        private readonly static Regex IdExpr = new Regex(@"[0-9]+", RegexOptions.Compiled);
+        private static readonly Regex FieldExpr = new Regex(@"^field_[0-9]+/", RegexOptions.Compiled);
+        private static readonly Regex IdExpr = new Regex(@"[0-9]+", RegexOptions.Compiled);
         private readonly ConcurrentDictionary<Type, IReadOnlyList<ILoaderOption>> _needToResolve;
 
         static bool IsStage

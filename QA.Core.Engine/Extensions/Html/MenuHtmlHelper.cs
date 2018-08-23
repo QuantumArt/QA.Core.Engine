@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -8,6 +6,7 @@ using QA.Core;
 using QA.Core.Engine;
 using QA.Core.Engine.Collections;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Engine.Extensions.Html
 {

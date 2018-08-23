@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Web.Routing;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -113,10 +114,6 @@ namespace QA.Core.Engine
 
         private readonly RouteData _routeData;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="routeData">значения маршрутизации, полученные у innerRoute</param>
         public PathData(AbstractItem item, string templateUrl, RouteData routeData)
         {
             _routeData = routeData;

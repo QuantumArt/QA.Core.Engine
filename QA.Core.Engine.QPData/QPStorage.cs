@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using QA.Core.Data;
-using QA.Core.Data.Repository;
+
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {
@@ -24,7 +22,6 @@ namespace QA.Core.Engine.QPData
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="resolver"></param>
         public QPStorage(AbstractItemLoader loader)
         {
             Model = new AbstractItemModel<int, AbstractItem>();

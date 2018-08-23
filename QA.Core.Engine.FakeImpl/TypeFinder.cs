@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.IO;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data
 {

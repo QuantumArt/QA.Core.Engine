@@ -1,7 +1,9 @@
-﻿namespace QA.Engine.Extensions.Html
+﻿#pragma warning disable 1591
+
+namespace QA.Engine.Extensions.Html
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public enum ZoneState
     {

@@ -15,10 +15,11 @@ using System.Threading;
 using System.Web;
 using Quantumart.QPublishing.Database;
 using Quantumart.QPublishing.Info;
+#pragma warning disable 1591
 
 
 
-namespace QA.Core.Engine.QPData 
+namespace QA.Core.Engine.QPData
 {
 
     public interface IQPContent
@@ -380,12 +381,12 @@ public partial class QPContext
             return _cnn;
         }
     }
-  
+
     public static bool RemoveUploadUrlSchema = false;
     private bool _ShouldRemoveSchema = false;
-  
+
   public bool ShouldRemoveSchema { get { return _ShouldRemoveSchema; } set { _ShouldRemoveSchema = value; }}
-  
+
     public void LoadSiteSpecificInfo()
     {
         if (RemoveUploadUrlSchema && !_ShouldRemoveSchema)
@@ -494,7 +495,7 @@ public partial class QPContext
 
 public static class UserExtensions
 {
-    
+
 
     public static IEnumerable<QPAbstractItem> ApplyContext(this IEnumerable<QPAbstractItem> e, QPContext context)
     {
@@ -641,7 +642,7 @@ public static class UserExtensions
 
 }
 
-    
+
 public class BindingListSelector<TSource, T> : ListSelector<TSource, T>, IBindingList
 {
     public BindingListSelector(IBindingList source, Func<TSource, T> selector, Action<IList<TSource>, T> onAdd, Action<IList<TSource>, T> onRemove):base(source as IList<TSource>, selector, onAdd, onRemove)
@@ -993,7 +994,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
     #endregion
 }
-    
+
     partial class QPAbstractItem : QPContentBase, IQPContent
     {
 
@@ -1073,7 +1074,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (IsVisible.HasValue) ? IsVisible.Value : default(System.Boolean);
             }
         }
- 
+
         public System.Boolean IsPageExact
         {
             get
@@ -1081,7 +1082,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (IsPage.HasValue) ? IsPage.Value : default(System.Boolean);
             }
         }
- 
+
         public System.Int32 ContentIdExact
         {
             get
@@ -1089,7 +1090,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (ContentId.HasValue) ? ContentId.Value : default(System.Int32);
             }
         }
- 
+
         public System.Boolean IsInSiteMapExact
         {
             get
@@ -1097,7 +1098,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (IsInSiteMap.HasValue) ? IsInSiteMap.Value : default(System.Boolean);
             }
         }
- 
+
         public System.Int32 IndexOrderExact
         {
             get
@@ -1105,7 +1106,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (IndexOrder.HasValue) ? IndexOrder.Value : default(System.Int32);
             }
         }
- 
+
         public System.Int32 ExtensionIdExact
         {
             get
@@ -1178,7 +1179,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
         public string IconUrlUrl
         {
-            get 
+            get
             {
                 if (String.IsNullOrEmpty(IconUrl))
                     return String.Empty;
@@ -1195,7 +1196,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
         public string IconUrlUploadPath
         {
-            get 
+            get
             {
                 if (_IconUrlUploadPath == null)
                     _IconUrlUploadPath = InternalDataContext.Cnn.GetDirectoryForFileAttribute(InternalDataContext.Cnn.GetAttributeIdByNetNames(InternalDataContext.SiteId, "QPDiscriminator", "IconUrl"));
@@ -1204,7 +1205,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
             }
         }
 
- 
+
         public System.Int32 PreferredContentIdExact
         {
             get
@@ -1212,7 +1213,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (PreferredContentId.HasValue) ? PreferredContentId.Value : default(System.Int32);
             }
         }
- 
+
         public System.Boolean IsPageExact
         {
             get
@@ -1220,7 +1221,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
                 return (IsPage.HasValue) ? IsPage.Value : default(System.Boolean);
             }
         }
- 
+
         public System.Boolean FilterPartByUrlExact
         {
             get
@@ -1286,7 +1287,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
         public string IconUrl
         {
-            get 
+            get
             {
                 if (String.IsNullOrEmpty(Icon))
                     return String.Empty;
@@ -1303,7 +1304,7 @@ public class ListSelector<TSource, T> : IList<T>, IList
 
         public string IconUploadPath
         {
-            get 
+            get
             {
                 if (_IconUploadPath == null)
                     _IconUploadPath = InternalDataContext.Cnn.GetDirectoryForFileAttribute(InternalDataContext.Cnn.GetAttributeIdByNetNames(InternalDataContext.SiteId, "QPCulture", "Icon"));

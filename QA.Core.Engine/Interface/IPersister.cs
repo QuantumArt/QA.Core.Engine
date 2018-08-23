@@ -1,4 +1,5 @@
 ﻿using System;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -24,11 +25,11 @@ namespace QA.Core.Engine
         void Move(AbstractItem source, AbstractItem destination);
 
         void Flush();
-        
-        // TODO: подумать насчет событий - хороший способ увязать валидационную бизнес-логику, 
-        // логику кеширования, 
+
+        // TODO: подумать насчет событий - хороший способ увязать валидационную бизнес-логику,
+        // логику кеширования,
         // логику отмены кеша
-        
+
         //event EventHandler<EventArgs> ItemSaving;
         //event EventHandler<EventArgs> ItemSaved;
         //event EventHandler<EventArgs> ItemDeleting;

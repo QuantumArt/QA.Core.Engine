@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Editing.Models
 {

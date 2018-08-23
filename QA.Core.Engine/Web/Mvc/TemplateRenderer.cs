@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using QA.Core.Logger;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Web.Mvc
 {

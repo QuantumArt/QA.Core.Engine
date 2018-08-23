@@ -1,5 +1,6 @@
 ﻿using System;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {

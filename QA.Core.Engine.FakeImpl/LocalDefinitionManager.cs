@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using QA.Core.Engine.Details;
 using QA.Core.Engine.UI;
+using QA.Core.Logger;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data
 {

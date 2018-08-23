@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Web.Mvc;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Details
 {
@@ -44,8 +45,8 @@ namespace QA.Core.Engine.Details
             }
 
             container.InnerHtml += input.ToString();
-            var script =  @"<script type='text/javascript'> $(function() {$( '#" 
-                + PropertyId + "' ).datepicker({ dateFormat: '" 
+            var script =  @"<script type='text/javascript'> $(function() {$( '#"
+                + PropertyId + "' ).datepicker({ dateFormat: '"
                 + (DateFormat ?? dateFormat) +
                 "', showOn: 'both', buttonImageOnly: 'true'});});</script>";
 

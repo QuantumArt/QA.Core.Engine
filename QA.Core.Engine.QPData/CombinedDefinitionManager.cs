@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 using QA.Core.Engine.Data;
 using QA.Core.Engine.UI;
+using QA.Core.Logger;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {
@@ -28,7 +30,7 @@ namespace QA.Core.Engine.QPData
                 if (foundItem == null)
                 {
                     Debug.WriteLine($"Definition with name {item.Name} is not found.");
-                    _logger.Info(_ => $"Definition with name {item.Name} is not found.");
+                    _logger.Info(() => $"Definition with name {item.Name} is not found.");
                     continue;
                 }
 

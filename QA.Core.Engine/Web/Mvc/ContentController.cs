@@ -2,6 +2,7 @@
 using System.Web;
 using System;
 using QA.Core.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Web.Mvc
 {

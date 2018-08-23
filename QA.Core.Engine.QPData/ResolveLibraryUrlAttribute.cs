@@ -1,5 +1,6 @@
 ﻿using System;
 using QA.Core.Engine.QPData;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -21,7 +22,7 @@ namespace QA.Core.Engine
         {
             get { return _propertyName; }
         }
-        
+
         /// <summary>
         /// Тип
         /// </summary>

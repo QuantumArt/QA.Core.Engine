@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Reflection;
 using System.Web.Mvc;
 
+#pragma warning disable 1591
+
 namespace QA.Core.Engine.Details
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
@@ -31,7 +33,7 @@ namespace QA.Core.Engine.Details
             Title = title;
             ModelState = new ModelStateDictionary();
         }
-       
+
         protected abstract TagBuilder CreateEditor(object item, object value);
 
         protected abstract object ExtractValue(NameValueCollection form);
@@ -116,7 +118,7 @@ namespace QA.Core.Engine.Details
         TagBuilder IDetailEditor.CreateEditor(object item)
         {
             return CreateEditor(item, Value);
-        } 
+        }
         #endregion
     }
 }

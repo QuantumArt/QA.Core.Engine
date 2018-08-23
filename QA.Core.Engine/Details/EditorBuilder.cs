@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Details
 {
@@ -102,14 +103,14 @@ namespace QA.Core.Engine.Details
                 }
                 else
                 {
-                    
+
                     currentItem = ObjectFactoryBase.Resolve<AbstractItemActivator>().CreateInstance(discriminator);
                     ((IInjectable<IUrlParser>)currentItem).Set(ObjectFactoryBase.Resolve<IUrlParser>());
                 }
 
                 var properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-                Type editorBase = typeof(IDetailEditor);                
+                Type editorBase = typeof(IDetailEditor);
 
                 string title = form["Title"];
 

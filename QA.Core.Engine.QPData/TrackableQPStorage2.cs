@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using QA.Core.Logger;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {
@@ -38,7 +40,7 @@ namespace QA.Core.Engine.QPData
             _logger = logger;
             _versionedCacheProvider = versionedCacheProvider;
             _cacheProvider = cacheProvider;
-            _logger.Info(_ => $"###creating timer ###");
+            _logger.Info(() => $"###creating timer ###");
             _job = new Timer(OnUpdate, null, Timeout.Infinite, Timeout.Infinite);
         }
 
@@ -50,9 +52,9 @@ namespace QA.Core.Engine.QPData
 
         public void Start()
         {
-            _logger.Info(_ => $"### changing timer with period: {_config.PollPeriod} ###");
+            _logger.Info(() => $"### changing timer with period: {_config.PollPeriod} ###");
             _job.Change(_config.PollPeriod, _config.PollPeriod);
-            _logger.Info(_ => "### timer started");
+            _logger.Info(() => "### timer started");
         }
 
         public override void ReloadAll()

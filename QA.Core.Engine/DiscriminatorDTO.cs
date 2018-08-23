@@ -10,24 +10,6 @@ namespace QA.Core.Engine
     public class DiscriminatorDTO : ItemDefinition
     {
         /// <summary>
-        /// Идентификатор
-        /// </summary>
-        [DataMember]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Заголовок
-        /// </summary>
-        [DataMember]
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Идентификатор расширения
-        /// </summary>
-        [DataMember]
-        public int? PreferredContentId { get; set; }
-
-        /// <summary>
         /// Наименование
         /// </summary>
         [DataMember]

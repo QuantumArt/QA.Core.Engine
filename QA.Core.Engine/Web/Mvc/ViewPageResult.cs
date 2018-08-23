@@ -1,10 +1,11 @@
 using System.Web.Mvc;
 using System.Web.Routing;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Web.Mvc
 {
 	/// <summary>
-	/// Пользователский <see cref="ActionResult"/>, который позволяет вызывать генерацию результата для произвольной страницы.
+	/// РџРѕР»СЊР·РѕРІР°С‚РµР»СЃРєРёР№ <see cref="ActionResult"/>, РєРѕС‚РѕСЂС‹Р№ РїРѕР·РІРѕР»СЏРµС‚ РІС‹Р·С‹РІР°С‚СЊ РіРµРЅРµСЂР°С†РёСЋ СЂРµР·СѓР»СЊС‚Р°С‚Р° РґР»СЏ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹.
 	/// </summary>
 	public class ViewPageResult : ActionResult
 	{
@@ -13,9 +14,9 @@ namespace QA.Core.Engine.Web.Mvc
 		private readonly IActionInvoker _actionInvoker;
 
         /// <summary>
-        /// Создание результата
+        /// РЎРѕР·РґР°РЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р°
         /// </summary>
-        /// <param name="thePage">страница, которую надо генерировать</param>
+        /// <param name="thePage">СЃС‚СЂР°РЅРёС†Р°, РєРѕС‚РѕСЂСѓСЋ РЅР°РґРѕ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ</param>
         /// <param name="controllerMapper"></param>
         /// <param name="actionInvoker"></param>
 		public ViewPageResult(AbstractItem thePage, IControllerMapper controllerMapper, IActionInvoker actionInvoker)
@@ -31,7 +32,7 @@ namespace QA.Core.Engine.Web.Mvc
 		}
 
 		/// <summary>
-		/// Выполняет Result
+		/// Р’С‹РїРѕР»РЅСЏРµС‚ Result
 		/// </summary>
 		/// <param name="context"/>
 		public override void ExecuteResult(ControllerContext context)
@@ -45,7 +46,7 @@ namespace QA.Core.Engine.Web.Mvc
 		private ControllerContext BuildPageControllerContext(ControllerContext context)
 		{
 			string controllerName = _controllerMapper.GetControllerName(_thePage.GetContentType());
-			
+
 			var routeData = context.RouteData;
 			RouteExtensions.ApplyCurrentItem(routeData, controllerName, "Index", _thePage, null);
 			if (context.RouteData.DataTokens.ContainsKey(ContentRoute.ContentPartKey))

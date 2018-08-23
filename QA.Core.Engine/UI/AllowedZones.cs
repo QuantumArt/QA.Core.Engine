@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.UI
 {
@@ -25,7 +26,7 @@ namespace QA.Core.Engine.UI
                 {
                     if (!definition.AllowedZoneNames.Contains(zoneName))
                     {
-                        definition.AllowedZoneNames.Add(zoneName); 
+                        definition.AllowedZoneNames.Add(zoneName);
                     }
                 }
             }
