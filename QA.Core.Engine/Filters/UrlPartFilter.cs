@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using QA.Core.Engine.Collections;
 using QA.Core.Engine.Interface;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Filters
 {
@@ -46,7 +47,7 @@ namespace QA.Core.Engine.Filters
 
                 if (item.AllowedUrls.Any())
                     return false;
-            }           
+            }
 
             return true;
         }

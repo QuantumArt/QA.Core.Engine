@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.UI
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class PageDefinitionAttribute : DefinitionAttribute
-    {      
+    {
         public PageDefinitionAttribute(string title)
             : this(title, null) { }
 

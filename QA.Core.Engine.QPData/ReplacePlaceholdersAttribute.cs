@@ -1,5 +1,6 @@
 ﻿using System;
 using QA.Core.Engine.QPData;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -9,7 +10,7 @@ namespace QA.Core.Engine
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     sealed public class ReplacePlaceholdersAttribute : Attribute, ILoaderOption
     {
-        private Type _type;      
+        private Type _type;
         private string _propertyName;
 
         public string PropertyName
@@ -21,7 +22,7 @@ namespace QA.Core.Engine
         {
             get { return _type; }
         }
-        
+
         #region ILoaderOption Members
 
         void ILoaderOption.AttachTo(Type type, string propertyName)

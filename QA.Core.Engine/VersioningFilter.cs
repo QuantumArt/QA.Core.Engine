@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using QA.Core.Engine.Collections;
 using QA.Core.Engine.Interface;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {

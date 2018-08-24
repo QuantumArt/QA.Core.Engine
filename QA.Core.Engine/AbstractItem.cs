@@ -5,6 +5,7 @@ using System.Web;
 using QA.Core.Engine.Collections;
 using QA.Core.Engine.Interface;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -312,7 +313,7 @@ namespace QA.Core.Engine
         }
 
         /// <summary>
-        /// Адрес 
+        /// Адрес
         /// </summary>
         public virtual string AncestorTrail
         {
@@ -401,6 +402,8 @@ namespace QA.Core.Engine
         /// Поиск  дочернего раздела по url
         /// </summary>
         /// <param name="remainingUrl"></param>
+        /// <param name="region"></param>
+        /// <param name="culture"></param>
         /// <returns></returns>
         public virtual PathData FindPath(string remainingUrl, string region, string culture)
         {

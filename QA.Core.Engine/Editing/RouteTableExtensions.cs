@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Routing;
+﻿using System.Web.Routing;
 using System.Web.Mvc;
 using QA.Core.Engine.Editing.Controllers;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Editing
 {

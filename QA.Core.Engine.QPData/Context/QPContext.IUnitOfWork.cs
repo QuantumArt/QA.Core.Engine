@@ -26,7 +26,7 @@ namespace QA.Core.Engine.QPData.Context
         public QPUnitOfWork(string connectionString, IXmlMappingResolver mappingSource):
             base(connectionString, mappingSource)
         {
-            
+
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace QA.Core.Engine.QPData.Context
         {
             return string.IsNullOrEmpty(_siteName) ?
                 LinqHelper.Create(
-                    _connectionStringName,
+                    ConnectionString,
                     QPContext.DefaultXmlMappingSource) :
                 LinqHelper.Create(
-                    _connectionStringName,
+                    ConnectionString,
                     _siteName,
                     QPContext.DefaultXmlMappingSource);
         }

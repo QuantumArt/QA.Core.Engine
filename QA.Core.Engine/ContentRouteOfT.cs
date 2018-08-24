@@ -4,10 +4,11 @@ using System.Web;
 using System.Web.Routing;
 using QA.Core.Engine.Web.Mvc;
 using QA.Core.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
-    
+
     public class ContentRoute<T> : ContentRoute, IRouteWithArea where T : AbstractItem
     {
         public ContentRoute(IEngine engine)
@@ -71,7 +72,7 @@ namespace QA.Core.Engine
 
             var item = values.CurrentItem<T>(AbstractItemKey, _engine.Persister)
                 ?? requestContext.CurrentItem<T>();
-                      
+
             if (!(item is T))
                 return null;
 

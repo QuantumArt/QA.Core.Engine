@@ -6,6 +6,7 @@ using QA.Core.Engine.Editing.Models;
 using QA.Core.Engine.UI;
 using QA.Core.Engine.Web;
 using QA.Core.Engine.Web.Mvc;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Editing.Controllers
 {
@@ -31,7 +32,7 @@ namespace QA.Core.Engine.Editing.Controllers
 
         /// <summary>
         /// Получение данный для создания виджета
-        /// <remarks> path: path, zone: zone, type: type, itemId: itemId</remarks> 
+        /// <remarks> path: path, zone: zone, type: type, itemId: itemId</remarks>
         /// </summary>
         /// <returns></returns>
         public JsonResult OnCreatePart(string path, string zone, string type, string itemId)
@@ -71,7 +72,7 @@ namespace QA.Core.Engine.Editing.Controllers
 
             return JsonSuccess(new
             {
-                FieldsToDisable = new[] 
+                FieldsToDisable = new[]
                 {
                     _fieldNameResolver.Resolve("Parent"),
                     _fieldNameResolver.Resolve("IsPage"),
@@ -79,16 +80,16 @@ namespace QA.Core.Engine.Editing.Controllers
                     _fieldNameResolver.Resolve("VersionOf"),
                     _fieldNameResolver.Resolve("ExtensionId"),
                 },
-                FieldsToSet = new[] 
-                { 
-                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("Parent"), value = parentId }, 
-                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("ZoneName"), value = zone }, 
-                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("Discriminator"), value = def.Id }, 
-                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("ExtensionId"), value = def.PreferredContentId }, 
-                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("IsPage"), value = false }, 
+                FieldsToSet = new[]
+                {
+                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("Parent"), value = parentId },
+                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("ZoneName"), value = zone },
+                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("Discriminator"), value = def.Id },
+                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("ExtensionId"), value = def.PreferredContentId },
+                    new FieldToSetModel { fieldName = _fieldNameResolver.Resolve("IsPage"), value = false },
                 },
-                FieldsToHide = new[] 
-                { 
+                FieldsToHide = new[]
+                {
                     _fieldNameResolver.Resolve("IsInSiteMap"),
                 }
             }, "OK", JsonRequestBehavior.AllowGet);
@@ -99,11 +100,11 @@ namespace QA.Core.Engine.Editing.Controllers
         {
             if (ModelState.IsValid)
             {
-                /** TODO: 
-                 * проверить права
-                 * проверить возможность перемещения элементов
-                 * переместить
-                 * */
+                // TODO:
+                // проверить права
+                // проверить возможность перемещения элементов
+                // переместить
+
                 if (model.MovementType == "before" || model.MovementType == "after")
                 {
                     return JsonError(false, "Reordering items is not supported yet.");

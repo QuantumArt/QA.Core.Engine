@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Collections
 {
@@ -192,7 +193,7 @@ namespace QA.Core.Engine.Collections
             : base(items)
         {
         }
-      
+
         public ItemList(IEnumerable<AbstractItem> items, ItemFilter filter)
             : base(filter.Pipe(items))
         {

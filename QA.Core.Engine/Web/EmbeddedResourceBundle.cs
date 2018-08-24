@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using QA.Core.Collections;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Web
 {
@@ -84,13 +85,13 @@ namespace QA.Core.Engine.Web
                 default:
                     break;
             }
-            
+
             response.Cacheability = HttpCacheability.ServerAndPrivate;
 
             if (!context.HttpContext.IsDebuggingEnabled)
             {
                 var transform = Transforms[0];
-                transform.Process(context, response); 
+                transform.Process(context, response);
             }
 
             return response;

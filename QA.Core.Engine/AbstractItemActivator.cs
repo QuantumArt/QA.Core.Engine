@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using QA.Core.Engine.UI;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -23,6 +24,7 @@ namespace QA.Core.Engine
         /// Создать по дискриминатору
         /// </summary>
         /// <param name="discriminator"></param>
+        /// <param name="throwOnError"></param>
         /// <returns></returns>
         public AbstractItem CreateInstance(string discriminator, bool throwOnError = true)
         {
@@ -36,9 +38,9 @@ namespace QA.Core.Engine
             {
                 return null;
             }
-            
+
             //var type = definition == null ? typeof(AbstractItem) : definition.ItemType;
-            
+
             var type = definition.ItemType;
             var item = (AbstractItem)Activator.CreateInstance(type, new object[] { });
             return item;

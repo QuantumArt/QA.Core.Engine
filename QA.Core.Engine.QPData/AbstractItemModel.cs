@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using QA.Core.Collections;
 using QA.Core.Engine.Interface;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {

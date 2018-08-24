@@ -8,11 +8,11 @@
     <owners>Quantum Art</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>QA.Core Widgets Engine fake implementation</description>
-    <releaseNotes>Change dependencies to nuget</releaseNotes>
-    <copyright>Copyright 2016</copyright>
+    <releaseNotes>Upgrade to .NET Framework 4.7.1 and Unity 5.8.6</releaseNotes>
+    <copyright>Copyright 2016-2018</copyright>
     <tags>Core Widgets Engine</tags>
       <dependencies>
-          <dependency id="QA.Core.Engine" version="2.1.0" />
+          <dependency id="QA.Core.Engine" version="2.2.0" />
       </dependencies>
   </metadata>
 </package>

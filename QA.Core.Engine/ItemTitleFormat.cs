@@ -1,8 +1,8 @@
-﻿
+﻿#pragma warning disable 1591
 namespace QA.Core.Engine
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ItemTitleFormat
     {

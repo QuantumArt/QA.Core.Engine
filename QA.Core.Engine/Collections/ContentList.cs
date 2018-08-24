@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Collections
 {
@@ -130,7 +131,7 @@ namespace QA.Core.Engine.Collections
 
         #region INamedList<T> Members
 
-       
+
         public void Add(string key, T value)
         {
             EnsureName(key, value);

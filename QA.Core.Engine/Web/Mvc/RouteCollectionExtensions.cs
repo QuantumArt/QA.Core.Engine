@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Routing;
 using System.Web.Mvc;
 using System;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Web.Mvc
 {
@@ -11,8 +12,9 @@ namespace QA.Core.Engine.Web.Mvc
         /// <summary>
         /// Устанавливает маршрут страниц и виджетов.
         /// т.е адреса вида: company\...\about\jobs\programmer
-        /// HtmlPage?page=1234&part=12345
+        /// HtmlPage?page=1234&amp;part=12345
         /// </summary>
+        /// <param name="routes"></param>
         /// <param name="name">имя маршрута</param>
         /// <param name="engine">ядро системы</param>
         /// <param name="innerRoute">маршрут, на базе которого будет работать контентная маршрутизация</param>
@@ -34,11 +36,13 @@ namespace QA.Core.Engine.Web.Mvc
             routes.Add(name, cr);
             return cr;
         }
+
         /// <summary>
         /// Устанавливает маршрут страниц и виджетов.
         /// т.е адреса вида: company\...\about\jobs\programmer
         /// HtmlPage?page=1234&amp;part=12345
         /// </summary>
+        /// <param name="routes"></param>
         /// <param name="name">имя маршрута</param>
         /// <param name="engine">ядро системы</param>
         /// <param name="url">шаблон адреса</param>

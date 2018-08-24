@@ -1,7 +1,8 @@
 ﻿
 using System;
-using Microsoft.Practices.Unity;
 using QA.Core.Engine.Web;
+using Unity;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data
 {

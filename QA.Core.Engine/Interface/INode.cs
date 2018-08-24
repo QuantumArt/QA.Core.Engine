@@ -1,4 +1,5 @@
 ﻿using System.Security.Principal;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {

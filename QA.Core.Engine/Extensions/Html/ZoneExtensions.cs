@@ -6,6 +6,7 @@ using QA.Core.Engine.Web.Mvc;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
+#pragma warning disable 1591
 
 namespace QA.Engine.Extensions.Html
 {

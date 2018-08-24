@@ -5,6 +5,7 @@ using System.Linq;
 using QA.Core.Engine.FakeImpl;
 using QA.Core.Engine.Web;
 using QA.Core.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data
 {

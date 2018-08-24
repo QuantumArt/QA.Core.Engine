@@ -12,6 +12,7 @@ using System.Web;
 using QA.Core;
 using QA.Core.Engine.Filters;
 using System.Text;
+#pragma warning disable 1591
 
 namespace QA.Engine.Extensions.Html
 {

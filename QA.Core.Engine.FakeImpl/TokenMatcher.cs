@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.FakeImpl
 {
@@ -160,7 +161,7 @@ namespace QA.Core.Engine.FakeImpl
                 }
                 else
                 {
-                    // не удалось определить наложить шаблон на адрес. 
+                    // не удалось определить наложить шаблон на адрес.
                     // значит, нельзя добавлять токены, тк адрес может не быть регионально-зависимым
                     // например, stage.bee.ru при шаблоне {region}.bee.ru/{culture}
                     return url;
@@ -281,7 +282,7 @@ namespace QA.Core.Engine.FakeImpl
             {
                 result = MatchToken(segments[tokenPosition], values);
                 return result != null;
-                    
+
             }
             result = null;
             return true;

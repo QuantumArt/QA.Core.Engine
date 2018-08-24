@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using QA.Core.Engine.Details;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.UI
 {
@@ -20,7 +21,7 @@ namespace QA.Core.Engine.UI
 
         public void Modify(ItemDefinition definition, IEnumerable<ItemDefinition> all)
         {
-            definition.AllowedParents.Clear();            
+            definition.AllowedParents.Clear();
             foreach (var type in _types.Distinct())
             {
                 var targetDefinitions = all.Where(x => type.IsAssignableFrom( x.ItemType)).ToList();
@@ -34,7 +35,7 @@ namespace QA.Core.Engine.UI
                 {
                     if (!definition.AllowedParents.Any(x => x.ItemType == targetDefinition.ItemType))
                     {
-                        definition.AllowedParents.Add(targetDefinition);  
+                        definition.AllowedParents.Add(targetDefinition);
                     }
                 }
             }

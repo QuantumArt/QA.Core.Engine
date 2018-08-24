@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data
 {
@@ -30,7 +31,7 @@ namespace QA.Core.Engine.Data
                 }
                 else
                 {
-                    // get culture, 
+                    // get culture,
                     // get region
 
                     var culture = _resolver.GetCurrentCulture();
@@ -38,11 +39,11 @@ namespace QA.Core.Engine.Data
 
                     // filter by culture and region
 
-                    var filtred = items.Where(x => string.Equals(x.CultureToken, culture, StringComparison.InvariantCultureIgnoreCase));
+                    var filtred = items.Where(x => string.Equals(x.CultureToken, culture, StringComparison.InvariantCultureIgnoreCase)).ToArray();
                     if (string.IsNullOrEmpty(region))
-                        filtred = filtred.Where(x => string.IsNullOrEmpty(x.RegionTokens));
+                        filtred = filtred.Where(x => !x.Regions.Any()).ToArray();
                     else
-                        filtred = filtred.Where(x => x.RegionTokens.SplitString().Contains(region, StringComparer.InvariantCultureIgnoreCase));
+                        filtred = filtred.Where(x => x.Regions.Select(n => n.Alias).Contains(region, StringComparer.InvariantCultureIgnoreCase)).ToArray();
 
                     if (filtred.Any())
                     {

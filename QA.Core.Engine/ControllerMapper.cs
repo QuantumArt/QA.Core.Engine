@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using QA.Core.Engine.UI;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {

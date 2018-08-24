@@ -3,6 +3,7 @@ using System.IO;
 using System.Web;
 using QA.Core.Engine.Web;
 using QA.Core.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.UI
 {
@@ -59,7 +60,7 @@ namespace QA.Core.Engine.UI
             writer.Write("<div class='titleBar ");
             writer.Write(GetItemClass(definition));
             writer.Write("'>");
-           
+
             WriteTitle(writer, definition, item);
 
             WriteCommand(writer, "edit", "command edit widget-edit-command",
@@ -108,7 +109,7 @@ namespace QA.Core.Engine.UI
             writer.Write("<div>");
             WriteCommand(writer, "edit page", "command edit page-edit-command",
                 item.Id, "edit");
-            
+
 
             // удаляем ключи авторизации custom action QP8
             //backend_sid=59cbd0da-dd58-4314-919d-6860d7f3a064&amp;site_id=35&amp;customerCode=qp_beeline_main_dev&amp;hostUID
@@ -117,12 +118,12 @@ namespace QA.Core.Engine.UI
                 .RemoveQuery("backend_sid")
                 .RemoveQuery("hostUID")
                 .AppendQuery(EditingQueryKey, true));
-                                    
+
             WriteCommand(writer, "", "command refresh",
                 Url.Parse(currentUrl)
                 .RemoveQuery("backend_sid")
                 .RemoveQuery("hostUID"));
-                        
+
             writer.Write("</div>");
         }
 

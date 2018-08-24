@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Web.Mvc;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Editing
 {
@@ -41,7 +42,7 @@ namespace QA.Core.Engine.Editing
                     filterContext.RouteData.Values.Add(ContentRoute.RootPageKey, parser.RootPage);
                     filterContext.RouteData.Values.Add(ContentRoute.StartPageKey, parser.StartPage);
                     filterContext.RouteData.Values.Add("PathData", data);
-                }                
+                }
             }
             catch (Exception ex)
             {

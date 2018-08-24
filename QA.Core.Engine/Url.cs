@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine
 {
@@ -288,7 +289,7 @@ namespace QA.Core.Engine
         private string CheckPath(string path)
         {
             var newPath =  TrailingSlash(path);
-            
+
             if(newPath == null)
                 return null;
 
@@ -824,7 +825,6 @@ namespace QA.Core.Engine
         /// <summary>
         /// Возвращает адрес без сегмента
         /// </summary>
-        /// <param name="path"></param>
         /// <returns></returns>
         public Url RemoveTrailingSegment()
         {

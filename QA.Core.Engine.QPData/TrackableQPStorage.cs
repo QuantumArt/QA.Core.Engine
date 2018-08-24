@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using QA.Core.Logger;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.QPData
 {
@@ -49,9 +51,9 @@ namespace QA.Core.Engine.QPData
 
         public void Start()
         {
-            _logger.Info(_ => $"starting timer with period: {_config.PollPeriod}");
+            _logger.Info(() => $"starting timer with period: {_config.PollPeriod}");
             _job = new Timer(OnUpdate, new object(), TimeSpan.FromMilliseconds(0), _config.PollPeriod);
-            _logger.Info(_ => "timer started");
+            _logger.Info(() => "timer started");
         }
 
         public override void ReloadAll()

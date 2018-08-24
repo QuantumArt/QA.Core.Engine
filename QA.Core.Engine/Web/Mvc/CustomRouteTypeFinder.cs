@@ -1,6 +1,7 @@
 ﻿using QA.Core.Web;
 using System.Web;
 using System.Web.Routing;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Web.Mvc
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using QA.Core.Engine.Web;
+#pragma warning disable 1591
 
 namespace QA.Core.Engine.Data.Structure
 {
@@ -23,7 +24,7 @@ namespace QA.Core.Engine.Data.Structure
         public const string SiteLeftZone = "SiteLeft";
         public const string SiteRightZone = "SiteRight";
         public const string SiteBottomZone = "SiteBottom";
-        public const string SiteFooterZone = "SiteFooter"; 
+        public const string SiteFooterZone = "SiteFooter";
         #endregion
 
         internal static void AttachTo(FakeStorage storage)
@@ -55,9 +56,9 @@ namespace QA.Core.Engine.Data.Structure
 
 
             #region Lorem Ipsum
-            var texts = new string[] { "Ut wisi enim ad minim veniam, Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat ", 
-                "Lorem luptatum zzril delenit augue duis dolore te feugait nulla facilisi. ", 
-                "Sed diam nonummy nibh euismod tincidunt ut laoreet. ", 
+            var texts = new string[] { "Ut wisi enim ad minim veniam, Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat ",
+                "Lorem luptatum zzril delenit augue duis dolore te feugait nulla facilisi. ",
+                "Sed diam nonummy nibh euismod tincidunt ut laoreet. ",
                 "Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. ",
                 "Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. ",
                 "Желающим использовать в своей верстке именно неправильный вариант следует убедиться, что в нем нет ничего непристойного — за годы модификации этого рыбного текста многие шутники чего только не повписывали туда. ",
