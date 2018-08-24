@@ -12,7 +12,7 @@
     <copyright>Copyright 2016-2018</copyright>
     <tags>Core Widgets Engine</tags>
       <dependencies>
-          <dependency id="QA.Core.Web" version="3.2.1" />
+          <dependency id="QA.Core.Web" version="3.4.0" />
       </dependencies>
   </metadata>
 </package>

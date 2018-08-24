@@ -12,8 +12,8 @@
     <copyright>Copyright 2016-2018</copyright>
     <tags>Core Widgets Engine</tags>
       <dependencies>
-          <dependency id="QA.Core.Engine" version="2.1.2" />
-          <dependency id="QA.Core.Data" version="3.0.5" />
+          <dependency id="QA.Core.Engine" version="2.2.0" />
+          <dependency id="QA.Core.Data" version="3.4.0" />
       </dependencies>
   </metadata>
 </package>
