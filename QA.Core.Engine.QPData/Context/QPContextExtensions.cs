@@ -12,9 +12,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading;
-using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using QP.ConfigurationService.Models;
 using Quantumart.QPublishing.Database;
 using Quantumart.QPublishing.Info;
+using HttpContext = System.Web.HttpContext;
+
 #pragma warning disable 1591
 
 
@@ -373,8 +378,7 @@ public partial class QPContext
         {
             if (_cnn == null)
             {
-                _cnn = (Connection != null) ? new DBConnector(Connection, Transaction) : new DBConnector(ConnectionString);
-
+                _cnn = (Connection != null) ? new DBConnector(Connection, Transaction, new DbConnectorSettings(), new MemoryCache(new MemoryCacheOptions()), null) : new DBConnector(ConnectionString);
                 _cnn.UpdateManyToOne = false;
                 _cnn.ThrowNotificationExceptions = false;
             }

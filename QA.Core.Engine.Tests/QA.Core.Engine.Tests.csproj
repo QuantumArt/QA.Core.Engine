@@ -1,217 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{29210374-A8DE-4FB6-AA92-F874B08F9BD0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net471</TargetFramework>
+    <Version>2.3.0</Version>
+    <authors>Nickolay Karlov</authors>
+    <owners>Quantum Art</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>QA.Core Widgets Engine data layer</description>
+    <releaseNotes>Update packages</releaseNotes>
+    <copyright>Copyright 2016-2018</copyright>
+    <tags>Core Widgets Engine</tags>
     <RootNamespace>QA.Core.Engine.Tests</RootNamespace>
     <AssemblyName>QA.Core.Engine.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=1.1.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005">
-      <HintPath>..\packages\AutoMapper.1.1.2\lib\net35\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CommonServiceLocator, Version=2.0.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\CommonServiceLocator.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="netstandard" />
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
-      <HintPath>..\packages\NLog.4.5.8\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NLog.Extended, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
-      <HintPath>..\packages\NLog.Extended.4.5.8\lib\net45\NLog.Extended.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="QA.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\QA.Core.3.3.1\lib\net45\QA.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="QA.Core.Data, Version=3.0.5.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\QA.Core.Data.3.0.5\lib\net45\QA.Core.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Quantumart, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Quantumart.3.2.2\lib\net471\Quantumart.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Quantumart.QP8.Assembling, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Quantumart.3.2.2\lib\net471\Quantumart.QP8.Assembling.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.4.1\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Messaging" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mobile" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Unity.Abstractions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Unity.Configuration, Version=5.2.1.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Unity.Container, Version=5.8.6.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.Container.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Unity.Interception, Version=5.5.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.Interception.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Unity.Interception.Configuration, Version=5.1.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.Interception.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Unity.RegistrationByConvention, Version=2.1.5.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Unity.ServiceLocation, Version=2.1.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
-      <HintPath>..\packages\Unity.5.8.6\lib\net47\Unity.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
-  <ItemGroup>
-    <Compile Include="AbstractItemLoaderTests.cs" />
-    <Compile Include="DefinitionManagerTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Integration\QPStorageTests.cs" />
-    <Compile Include="UrlResolverTests.cs" />
-    <Compile Include="UrlTrailiing_Tests.cs" />
-    <Compile Include="TokenMatcherTests.cs" />
-    <Compile Include="UnitTest3.cs" />
-    <Compile Include="UnitTest4.cs" />
-    <Compile Include="UrlLocker.cs" />
-    <Compile Include="VersioningFilterHierarchyTests.cs" />
-    <Compile Include="VersioningFilterTests.cs" />
+    <ProjectReference Include="..\QA.Core.Engine.QPData\QA.Core.Engine.QPData.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QA.Core.Engine.FakeImpl\QA.Core.Engine.FakeImpl.csproj">
-      <Project>{ace2403c-55ca-442c-8445-8c673433e3f1}</Project>
-      <Name>QA.Core.Engine.FakeImpl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QA.Core.Engine.QPData\QA.Core.Engine.QPData.csproj">
-      <Project>{e9ed2bae-b053-42a1-8f05-66dc85bb23c8}</Project>
-      <Name>QA.Core.Engine.QPData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QA.Core.Engine\QA.Core.Engine.csproj">
-      <Project>{6d8ff175-1f85-4907-a0f3-c8d07ccdc98d}</Project>
-      <Name>QA.Core.Engine</Name>
-    </ProjectReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <Folder Include="Properties" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-</Project>
+ </Project>
